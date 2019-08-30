@@ -78,7 +78,7 @@ while True:
     if ( len(handlist) > 0):
         Handle_Frame(frame)
         pygameX = Scaled(x, xMin, xMax, 0, pygameWindowWidth)
-        pygameY = Scaled(y, yMin, yMax, pygameWindowDepth,0)
+        pygameY = Scaled(y, yMin, yMax, pygameWindowDepth,0) #my genius inversion tactic
 
         pw.Draw_Black_Circle(pygameX, pygameY)
 
