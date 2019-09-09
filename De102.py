@@ -45,44 +45,49 @@ def Handle_Finger(finger):
     hand = frame.hands[0]
     fingers = hand.fingers
     for finger in fingers:
-        for b in range(0, 3):
+        for b in range(0, 4):
+            w = 3
             if b == 0:
+
                 bone = finger.bone(Leap.Bone.TYPE_METACARPAL)
             elif b ==1:
                 bone = finger.bone(Leap.Bone.TYPE_PROXIMAL)
+
             elif b == 2:
                 bone = finger.bone(Leap.Bone.TYPE_INTERMEDIATE)
+                #w=2
             elif b ==3:
                 bone = finger.bone(Leap.Bone.TYPE_DISTAL)
+                #w = 1
 
-            Handle_Bone(bone)
+            Handle_Bone(bone, w)
 
 
 
-def Handle_Bone(bone):
+def Handle_Bone(bone, width):
     base = bone.prev_joint
     tip  = bone.next_joint
     xBase, yBase = Handle_Vector_From_Leap(base)
     xTip, yTip = Handle_Vector_From_Leap(tip)
-    pw.Draw_Black_Line(xBase, yBase, xTip, yTip)
+    pw.Draw_Black_Line(xBase, yBase, xTip, yTip, width)
 
 
 def Handle_Vector_From_Leap(v):
-    global x, y, xMin, xMax, yMin, yMax
+    #global x, y, xMin, xMax, yMin, yMax
 
-    x, y = v[0], v[2]
+    x, y = v[0], v[1]
 
-    if (x < xMin):
-        xMin = x
-    if (x > xMax):
-        xMax = x
-    if (y < yMin):
-        yMin = y
-    if (y > yMax):
-        yMax = y
+    # if (x < xMin):
+    #     xMin = x
+    # if (x > xMax):
+    #     xMax = x
+    # if (y < yMin):
+    #     yMin = y
+    # if (y > yMax):
+    #     yMax = y
 
     pygameX = Scaled(x, xMin, xMax, 0, pygameWindowWidth)
-    pygameY = Scaled(y, yMin, yMax, 0, pygameWindowDepth)  # my genius inversion tactic
+    pygameY = Scaled(y, yMin, yMax, pygameWindowDepth, 0)  # my genius inversion tactic
     return pygameX, pygameY
 
 

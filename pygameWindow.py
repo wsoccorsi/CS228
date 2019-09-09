@@ -19,6 +19,6 @@ class PYGAME_WINDOW:
         # https://stackoverflow.com/questions/40953796/getting-the-center-of-surfaces-in-pygame-with-python-3-4
         pygame.draw.circle(self.screen, black, (x, y), 25)
 
-    def Draw_Black_Line(self, xBase, yBase, xTip, yTip):
+    def Draw_Black_Line(self, xBase, yBase, xTip, yTip, width):
         black = 0, 0, 0
-        pygame.draw.line(self.screen, black, (xBase, yBase), (xTip, yTip),1)
+        pygame.draw.line(self.screen, black, (xBase, yBase), (xTip, yTip), width)
