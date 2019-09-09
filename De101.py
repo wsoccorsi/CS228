@@ -50,10 +50,6 @@ def Handle_Frame(frame):
      if (y > yMax):
          yMax = y
 
-     print xMin
-     print xMax
-     print yMin
-     print yMax
 
 ''' So, create a function that takes five arguments: A value (argument 1) that lies within a range defined
     by arguments 2 and 3 should be scaled such that i now lies within the new range defined by arguments 4 and 5
@@ -79,6 +75,7 @@ while True:
         Handle_Frame(frame)
         pygameX = Scaled(x, xMin, xMax, 0, pygameWindowWidth)
         pygameY = Scaled(y, yMin, yMax, pygameWindowDepth,0) #my genius inversion tactic
+
 
         pw.Draw_Black_Circle(pygameX, pygameY)
 

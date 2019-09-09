@@ -31,29 +31,61 @@ def Perturb_Circle_Position():
 
 def Handle_Frame(frame):
      global x, y, xMin, xMax, yMin, yMax
+
+
      hand = frame.hands[0]
      fingers = hand.fingers
-     indexFingerList = fingers.finger_type(Leap.Finger.TYPE_INDEX)
-     indexFinger = indexFingerList[0]
+     for finger in fingers:
+         for b in range(0, 4):
+             Handle_Bone(b)
 
-     distalPhalanx = indexFinger.bone(Leap.Bone.TYPE_DISTAL)
-     tip = distalPhalanx.next_joint
-     x = int(tip[0])
-     y = int(tip[1])
 
-     if (x < xMin):
-         xMin = x
-     if (x > xMax):
-         xMax = x
-     if (y < yMin):
-         yMin = y
-     if (y > yMax):
-         yMax = y
+def Handle_Finger(finger):
+    global x, y, xMin, xMax, yMin, yMax
+    hand = frame.hands[0]
+    fingers = hand.fingers
+    for finger in fingers:
+        for b in range(0, 3):
+            if b == 0:
+                bone = finger.bone(Leap.Bone.TYPE_METACARPAL)
+            elif b ==1:
+                bone = finger.bone(Leap.Bone.TYPE_PROXIMAL)
+            elif b == 2:
+                bone = finger.bone(Leap.Bone.TYPE_INTERMEDIATE)
+            elif b ==3:
+                bone = finger.bone(Leap.Bone.TYPE_DISTAL)
 
-     print xMin
-     print xMax
-     print yMin
-     print yMax
+            Handle_Bone(bone)
+
+
+
+def Handle_Bone(bone):
+    base = bone.prev_joint
+    tip  = bone.next_joint
+    xBase, yBase = Handle_Vector_From_Leap(base)
+    xTip, yTip = Handle_Vector_From_Leap(tip)
+    pw.Draw_Black_Line(xBase, yBase, xTip, yTip)
+
+
+def Handle_Vector_From_Leap(v):
+    global x, y, xMin, xMax, yMin, yMax
+
+    x, y = v[0], v[2]
+
+    if (x < xMin):
+        xMin = x
+    if (x > xMax):
+        xMax = x
+    if (y < yMin):
+        yMin = y
+    if (y > yMax):
+        yMax = y
+
+    pygameX = Scaled(x, xMin, xMax, 0, pygameWindowWidth)
+    pygameY = Scaled(y, yMin, yMax, 0, pygameWindowDepth)  # my genius inversion tactic
+    return pygameX, pygameY
+
+
 
 ''' So, create a function that takes five arguments: A value (argument 1) that lies within a range defined
     by arguments 2 and 3 should be scaled such that i now lies within the new range defined by arguments 4 and 5
@@ -76,11 +108,8 @@ while True:
     handlist = frame.hands
 
     if ( len(handlist) > 0):
-        Handle_Frame(frame)
-        pygameX = Scaled(x, xMin, xMax, 0, pygameWindowWidth)
-        pygameY = Scaled(y, yMin, yMax, pygameWindowDepth,0) #my genius inversion tactic
+        Handle_Finger(frame)
 
-        pw.Draw_Black_Circle(pygameX, pygameY)
 
     pw.Reveal()
     Perturb_Circle_Position()
