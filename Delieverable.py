@@ -1,12 +1,11 @@
 
-from pygameWindow import PYGAME_WINDOW
 from constants import pygameWindowDepth, pygameWindowWidth
 from random import randint
 import Leap
 
 class DELIVERABLE:
 
-    def __init__(self, pw, x, y, xMin, xMax, yMin, yMax, numberOfHands):
+    def __init__(self, pw, x, y, xMin, xMax, yMin, yMax):
         self.pw = pw
         self.x = x
         self.y = y
@@ -15,28 +14,31 @@ class DELIVERABLE:
         self.yMin = yMin
         self.yMax = yMax
         self.controller = Leap.Controller()
-        self.numberOfHands = numberOfHands
+        self.currentNumberOfHands = 0
+        self.previousNumberOfHands = 0
 
 
 
-    def Handle_Bone(self, bone, width):
+    def Handle_Bone(self, bone, width, h_num):
         base = bone.prev_joint
-        print(base)
         tip = bone.next_joint
         xBase, yBase = self.Handle_Vector_From_Leap(base)
         xTip, yTip = self.Handle_Vector_From_Leap(tip)
-        self.pw.Draw_Black_Line(xBase, yBase, xTip, yTip, width)
+        if h_num == 1:
+            color = 0, 255, 0
+        else:
+            color = 255, 0, 0
+        self.currentNumberOfHands = h_num
 
-    def Handle_Frame(self):
-        frame = self.controller.frame
-        hand = frame.hands[0]
-        fingers = hand.fingers
-        for finger in fingers:
-            for b in range(0, 4):
-                self.Handle_Bone(b)
+        self.pw.Draw_Line(xBase, yBase, xTip, yTip, width, color)
+
 
     def Handle_Finger(self, frame):
         hand = frame.hands[0]
+        if len(frame.hands) == 2:
+            h_num = 2
+        else:
+            h_num = 1
         fingers = hand.fingers
         for finger in fingers:
             for b in range(0, 4):
@@ -52,7 +54,7 @@ class DELIVERABLE:
                     bone = finger.bone(Leap.Bone.TYPE_DISTAL)
                     # w = 1
 
-                self.Handle_Bone(bone, w)
+                self.Handle_Bone(bone, w, h_num)
 
 
     def Handle_Vector_From_Leap(self, v):
@@ -103,4 +105,8 @@ class DELIVERABLE:
             self.Handle_Finger(frame)
 
         self.pw.Reveal()
+        self.previousNumberOfHands = self.currentNumberOfHands
         # self.Perturb_Circle_Position()
+
+    def Recording_Is_Ending(self):
+        print('recording is ending.')
