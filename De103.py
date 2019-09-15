@@ -1,13 +1,9 @@
 import sys
 sys.path.insert(0,'..')
-import Leap
-
-
-
+from Delieverable import DELIVERABLE
 import pygame
 from pygameWindow import PYGAME_WINDOW
 from constants import pygameWindowDepth, pygameWindowWidth
-from random import randint
 
 pw = PYGAME_WINDOW()
 x = pygameWindowWidth - pw.screen.get_width() // 2
@@ -16,103 +12,12 @@ xMin = 1000.0
 xMax = -1000.0
 yMin = 1000.0
 yMax = -1000.0
+numberOfHands = 2
 
-def Perturb_Circle_Position():
-    fourSidedDieRoll = randint(1,4)
-    global x, y
-    if fourSidedDieRoll == 1:
-        x = x-1
-    elif fourSidedDieRoll == 2:
-        x = x+1
-    elif fourSidedDieRoll == 3:
-        y = y-1
-    else:
-        y = y+1
-
-def Handle_Frame(frame):
-     global x, y, xMin, xMax, yMin, yMax
-
-
-     hand = frame.hands[0]
-     fingers = hand.fingers
-     for finger in fingers:
-         for b in range(0, 4):
-             Handle_Bone(b)
-
-
-def Handle_Finger(finger):
-    global x, y, xMin, xMax, yMin, yMax
-    hand = frame.hands[0]
-    fingers = hand.fingers
-    for finger in fingers:
-        for b in range(0, 4):
-            w = 3
-            if b == 0:
-                bone = finger.bone(Leap.Bone.TYPE_METACARPAL)
-            elif b ==1:
-                bone = finger.bone(Leap.Bone.TYPE_PROXIMAL)
-            elif b == 2:
-                bone = finger.bone(Leap.Bone.TYPE_INTERMEDIATE)
-                #w=2
-            elif b ==3:
-                bone = finger.bone(Leap.Bone.TYPE_DISTAL)
-                #w = 1
-
-            Handle_Bone(bone, w)
+deliverable = DELIVERABLE(pw, x, y, xMin, xMax, yMin, yMax, numberOfHands)
+deliverable.Run_Forever()
+exit()
 
 
 
-def Handle_Bone(bone, width):
-    base = bone.prev_joint
-    tip  = bone.next_joint
-    xBase, yBase = Handle_Vector_From_Leap(base)
-    xTip, yTip = Handle_Vector_From_Leap(tip)
-    pw.Draw_Black_Line(xBase, yBase, xTip, yTip, width)
 
-
-def Handle_Vector_From_Leap(v):
-    #global x, y, xMin, xMax, yMin, yMax
-
-    x, y = v[0], v[1]
-
-    # if (x < xMin):
-    #     xMin = x
-    # if (x > xMax):
-    #     xMax = x
-    # if (y < yMin):
-    #     yMin = y
-    # if (y > yMax):
-    #     yMax = y
-
-    pygameX = Scaled(x, xMin, xMax, 0, pygameWindowWidth)
-    pygameY = Scaled(y, yMin, yMax, pygameWindowDepth, 0)  # my genius inversion tactic
-    return pygameX, pygameY
-
-
-
-''' So, create a function that takes five arguments: A value (argument 1) that lies within a range defined
-    by arguments 2 and 3 should be scaled such that i now lies within the new range defined by arguments 4 and 5
-    returns x or y scaled
-    https://stackoverflow.com/questions/929103/convert-a-number-range-to-another-range-maintaining-ratio'''
-def Scaled(xory, oldMin, oldMax, newMin, newMax): #min, max of original, min max for new scaled
-    OldRange = (oldMax - oldMin)
-    NewRange = (newMax - newMin)
-    if (xory - oldMin) * NewRange != 0:
-        NewValue = (((xory - oldMin) * NewRange) / OldRange) + newMin
-        return NewValue
-    else:
-        return 0
-
-controller = Leap.Controller()
-
-while True:
-    pw.Prepare()
-    frame = controller.frame() #frame grab
-    handlist = frame.hands
-
-    if (len(handlist) > 0):
-        Handle_Finger(frame)
-
-
-    pw.Reveal()
-    Perturb_Circle_Position()
