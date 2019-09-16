@@ -26,7 +26,7 @@ class DELIVERABLE:
 
 
 
-    def Handle_Bone(self, bone, width, h_num):
+    def Handle_Bone(self, bone, width, h_num, i, j):
         base = bone.prev_joint
         tip = bone.next_joint
         xBase, yBase = self.Handle_Vector_From_Leap(base)
@@ -37,16 +37,13 @@ class DELIVERABLE:
             color = 255, 0, 0
 
         if self.ending is False:
-            for i in range(0, 4):
-                for j in range(0, 4):
 
-                    self.gestureData[i,j, 0] = bone.prev_joint[0]
-                    self.gestureData[i,j, 1] = bone.prev_joint[1]
-                    self.gestureData[i,j, 2] = bone.prev_joint[2]
-                    self.gestureData[i,j, 3] = bone.next_joint[0]
-                    self.gestureData[i,j, 4] = bone.next_joint[1]
-                    self.gestureData[i,j, 5] = bone.next_joint[2]
-
+            self.gestureData[i,j, 0] = bone.prev_joint[0]
+            self.gestureData[i,j, 1] = bone.prev_joint[1]
+            self.gestureData[i,j, 2] = bone.prev_joint[2]
+            self.gestureData[i,j, 3] = bone.next_joint[0]
+            self.gestureData[i,j, 4] = bone.next_joint[1]
+            self.gestureData[i,j, 5] = bone.next_joint[2]
 
         self.currentNumberOfHands = h_num
 
@@ -60,7 +57,7 @@ class DELIVERABLE:
         else:
             h_num = 1
         fingers = hand.fingers
-        for finger in fingers:
+        for i, finger in enumerate(fingers):
             for b in range(0, 4):
                 w = 3
                 if b == 0:
@@ -74,7 +71,7 @@ class DELIVERABLE:
                     bone = finger.bone(Leap.Bone.TYPE_DISTAL)
                     # w = 1
 
-                self.Handle_Bone(bone, w, h_num)
+                self.Handle_Bone(bone, w, h_num, i, b)
 
 
     def Handle_Vector_From_Leap(self, v):
