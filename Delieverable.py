@@ -4,6 +4,8 @@ from random import randint
 import Leap
 import numpy as np
 import pickle
+import re
+from os import path
 
 class DELIVERABLE:
 
@@ -118,17 +120,20 @@ class DELIVERABLE:
         frame = self.controller.frame()  # frame grab
         handlist = frame.hands
 
-        if (len(handlist) > 0):
+
+
+        if (len(handlist) > 0 ):
             self.ending = False
             self.Handle_Finger(frame)
-        else:
+
+        if self.previousNumberOfHands == 2 and len(handlist) == 1:
             self.ending = True
             self.Handle_Finger(frame)
             self.Recording_Is_Ending()
             self.Save_Gesture()
 
         self.pw.Reveal()
-        self.previousNumberOfHands = self.currentNumberOfHands
+        self.previousNumberOfHands = len(handlist)
 
     def Recording_Is_Ending(self):
 
@@ -136,5 +141,22 @@ class DELIVERABLE:
         print('recording is ending.')
 
     def Save_Gesture(self):
-        pickle_out = open("userData/gesture", "wb")
-        pickle.dump( self.gestureData, pickle_out)
+
+        gestureFile = "userData/gesture0"
+
+
+        while path.exists(gestureFile):
+
+            iteration = int(re.search(r'\d+', gestureFile).group())
+
+            iteration = iteration + 1
+            gestureFile = "userData/gesture" + str(iteration)
+            print gestureFile
+
+
+        pickle_out = open(gestureFile, "wb")
+        pickle.dump(self.gestureData, pickle_out)
+
+
+
+
