@@ -2,6 +2,7 @@
 from constants import pygameWindowDepth, pygameWindowWidth
 from random import randint
 import Leap
+import numpy as np
 
 class DELIVERABLE:
 
@@ -16,6 +17,8 @@ class DELIVERABLE:
         self.controller = Leap.Controller()
         self.currentNumberOfHands = 0
         self.previousNumberOfHands = 0
+        self.gestureData = np.zeros((5,4,6), dtype='f')
+        self.ending = False
 
 
 
@@ -28,6 +31,19 @@ class DELIVERABLE:
             color = 0, 255, 0
         else:
             color = 255, 0, 0
+
+        if self.ending is False:
+            for i in range(0, 4):
+                for j in range(0, 4):
+
+                    self.gestureData[i,j, 0] = bone.prev_joint[0]
+                    self.gestureData[i,j, 1] = bone.prev_joint[1]
+                    self.gestureData[i,j, 2] = bone.prev_joint[2]
+                    self.gestureData[i,j, 3] = bone.next_joint[0]
+                    self.gestureData[i,j, 4] = bone.next_joint[1]
+                    self.gestureData[i,j, 5] = bone.next_joint[2]
+
+
         self.currentNumberOfHands = h_num
 
         self.pw.Draw_Line(xBase, yBase, xTip, yTip, width, color)
@@ -102,11 +118,17 @@ class DELIVERABLE:
         handlist = frame.hands
 
         if (len(handlist) > 0):
+            self.ending = False
             self.Handle_Finger(frame)
+        else:
+            self.ending = True
+            self.Handle_Finger(frame)
+            self.Recording_Is_Ending()
 
         self.pw.Reveal()
         self.previousNumberOfHands = self.currentNumberOfHands
-        # self.Perturb_Circle_Position()
 
     def Recording_Is_Ending(self):
+
+        print(self.gestureData[0,3,3:6])
         print('recording is ending.')
