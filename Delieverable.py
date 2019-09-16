@@ -3,6 +3,7 @@ from constants import pygameWindowDepth, pygameWindowWidth
 from random import randint
 import Leap
 import numpy as np
+import pickle
 
 class DELIVERABLE:
 
@@ -124,6 +125,7 @@ class DELIVERABLE:
             self.ending = True
             self.Handle_Finger(frame)
             self.Recording_Is_Ending()
+            self.Save_Gesture()
 
         self.pw.Reveal()
         self.previousNumberOfHands = self.currentNumberOfHands
@@ -132,3 +134,7 @@ class DELIVERABLE:
 
         print(self.gestureData[0,3,3:6])
         print('recording is ending.')
+
+    def Save_Gesture(self):
+        pickle_out = open("userData/gesture", "wb")
+        pickle.dump( self.gestureData, pickle_out)
