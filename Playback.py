@@ -9,4 +9,4 @@ reader = READER(pw)
 reader.Print_Gestures()
 reader.Draw_Gestures()
 
-reader.Restart_Directory()
+# reader.Restart_Directory()
