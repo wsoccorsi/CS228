@@ -6,6 +6,7 @@ import numpy as np
 import pickle
 import re
 from os import path
+import os
 
 class DELIVERABLE:
 
@@ -146,16 +147,14 @@ class DELIVERABLE:
 
 
         while path.exists(gestureFile):
-
             iteration = int(re.search(r'\d+', gestureFile).group())
-
             iteration = iteration + 1
             gestureFile = "userData/gesture" + str(iteration)
-            print gestureFile
 
 
         pickle_out = open(gestureFile, "wb")
         pickle.dump(self.gestureData, pickle_out)
+
 
 
 
