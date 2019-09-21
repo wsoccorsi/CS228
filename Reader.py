@@ -25,7 +25,7 @@ class READER:
         self.numGestures = len(files)
 
     def Restart_Directory(self):
-        #shutil.rmtree('userData')
+        shutil.rmtree('userData')
         os.mkdir('userData')
 
     def Print_Gestures(self):
@@ -92,7 +92,7 @@ class READER:
                 yTip = self.Scaled(yTipNotYetScaled, self.yMin, self.yMax, pygameWindowDepth, 0)
 
                 self.pygameWindow.Draw_Line(xBase, yBase, xTip, yTip, 1, (0, 0, 255))
-                # time.sleep(0.1)
+                time.sleep(0.1)
 
 
 
