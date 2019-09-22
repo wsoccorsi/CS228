@@ -17,16 +17,17 @@ testX = knn.data[1::2,0:2]
 testy = knn.target[1::2]
 
 
-colors = np.zeros((3,3), dtype='f')
-colors[0,:] = [1, 0.5, 0.5]
-colors[1,:] = [0.5, 1, 0.5]
-colors[2,:] = [0.5, 0.5, 1]
+
+
+colors = np.zeros((3,3),dtype='f')
+colors[0,:] = [1,0.5,0.5]
+colors[1,:] = [0.5,1,0.5]
+colors[2,:] = [0.5,0.5,1]
 
 knn.Use_K_Of(15)
 knn.Fit(trainX, trainy)
 actualClass = testy[0]
 prediction = knn.Predict(testX[0, 0:2])
-print(actualClass, prediction)
 
 #visualization
 plt.figure()
@@ -37,6 +38,18 @@ plt.figure()
 for i in range(0, numItems/2):
     itemClass = int(trainy[i])
     currColor = colors[itemClass, :]
-    plt.scatter(trainX[i,0], trainX[i,1], facecolor=currColor, s=50, lw=2)
+    plt.scatter(trainX[i,0], trainX[i,1], facecolor=currColor, edgeColor=[0,0,0], s=50, lw=2)
 
+correct = 0
+for i in range(0, numItems/2):
+    itemClass = int(testy[i])
+    currColor = colors[itemClass, :]
+    prediction = int(knn.Predict(testX[i, :]))
+    edgeColor = colors[prediction, :]
+    if int(prediction) == int(testy[i]):
+        correct+=1
+
+    plt.scatter(testX[i,0], testX[i,1], facecolor=currColor, edgecolor=edgeColor, s=50, lw=2)
+
+print((float(correct)/float(numItems/2)) * 100)
 plt.show()
