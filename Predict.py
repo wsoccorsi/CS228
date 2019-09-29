@@ -10,10 +10,10 @@ x = knn.data[:,0]
 y = knn.data[:,1]
 
 
-trainX = knn.data[::2,0:2]
+trainX = knn.data[::2,1:3]
 trainy = knn.target[::2]
 
-testX = knn.data[1::2,0:2]
+testX = knn.data[1::2,1:3]
 testy = knn.target[1::2]
 
 
