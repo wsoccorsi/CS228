@@ -21,7 +21,7 @@ class RECORDER:
         self.controller = Leap.Controller()
         self.currentNumberOfHands = 0
         self.previousNumberOfHands = 0
-        self.numberOfGestures = 100
+        self.numberOfGestures = 1000
         self.gestureIndex = 0
         self.gestureData = np.zeros((5,4,6,self.numberOfGestures), dtype='f')
         self.ending = False
@@ -75,14 +75,13 @@ class RECORDER:
                     # w = 1
 
                 self.Handle_Bone(bone, w, h_num, i, b)
-        self.Save_Gesture()
 
         if self.currentNumberOfHands == 2:
             print('gesture ' + str(self.gestureIndex) + ' stored.')
             self.gestureIndex = self.gestureIndex + 1
             if self.gestureIndex == self.numberOfGestures:
-                print self.gestureData[:, :, :, 0]
-                print self.gestureData[:, :, :, 99]
+                self.Save_Gesture()
+
                 exit(0)
 
 
@@ -140,19 +139,18 @@ class RECORDER:
             self.ending = True
             self.Handle_Finger(frame)
             self.Recording_Is_Ending()
-            self.Save_Gesture()
 
         self.pw.Reveal()
         self.previousNumberOfHands = len(handlist)
 
-    def Recording_Is_Ending(self):
 
+    def Recording_Is_Ending(self):
         # print(self.gestureData[0,3,3:6])
         print('recording is ending.')
 
     def Save_Gesture(self):
 
-        gestureFile = "userData/gesture0"
+        gestureFile = "userData/train0-2.dat"
 
 
         while path.exists(gestureFile):
