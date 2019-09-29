@@ -1,4 +1,3 @@
-
 from constants import pygameWindowDepth, pygameWindowWidth
 from random import randint
 import Leap
@@ -9,7 +8,7 @@ from os import path
 
 import os
 
-class DELIVERABLE:
+class RECORDER:
 
     def __init__(self, pw, x, y, xMin, xMax, yMin, yMax):
         self.pw = pw
@@ -22,7 +21,9 @@ class DELIVERABLE:
         self.controller = Leap.Controller()
         self.currentNumberOfHands = 0
         self.previousNumberOfHands = 0
-        self.gestureData = np.zeros((5,4,6), dtype='f')
+        self.numberOfGestures = 100
+        self.gestureIndex = 0
+        self.gestureData = np.zeros((5,4,6,self.numberOfGestures), dtype='f')
         self.ending = False
 
 
@@ -39,12 +40,13 @@ class DELIVERABLE:
 
         if self.ending is False:
 
-            self.gestureData[i,j, 0] = bone.prev_joint[0]
-            self.gestureData[i,j, 1] = bone.prev_joint[1]
-            self.gestureData[i,j, 2] = bone.prev_joint[2]
-            self.gestureData[i,j, 3] = bone.next_joint[0]
-            self.gestureData[i,j, 4] = bone.next_joint[1]
-            self.gestureData[i,j, 5] = bone.next_joint[2]
+            self.gestureData[i,j, 0, self.gestureIndex] = bone.prev_joint[0]
+            self.gestureData[i,j, 1, self.gestureIndex] = bone.prev_joint[1]
+            self.gestureData[i,j, 2, self.gestureIndex] = bone.prev_joint[2]
+            self.gestureData[i,j, 3, self.gestureIndex] = bone.next_joint[0]
+            self.gestureData[i,j, 4, self.gestureIndex] = bone.next_joint[1]
+            self.gestureData[i,j, 5, self.gestureIndex] = bone.next_joint[2]
+            # print(self.gestureData[:, :, :, 1])
 
         self.currentNumberOfHands = h_num
 
@@ -73,6 +75,15 @@ class DELIVERABLE:
                     # w = 1
 
                 self.Handle_Bone(bone, w, h_num, i, b)
+        self.Save_Gesture()
+
+        if self.currentNumberOfHands == 2:
+            print('gesture ' + str(self.gestureIndex) + ' stored.')
+            self.gestureIndex = self.gestureIndex + 1
+            if self.gestureIndex == self.numberOfGestures:
+                print self.gestureData[:, :, :, 0]
+                print self.gestureData[:, :, :, 99]
+                exit(0)
 
 
     def Handle_Vector_From_Leap(self, v):
@@ -136,7 +147,7 @@ class DELIVERABLE:
 
     def Recording_Is_Ending(self):
 
-        print(self.gestureData[0,3,3:6])
+        # print(self.gestureData[0,3,3:6])
         print('recording is ending.')
 
     def Save_Gesture(self):
