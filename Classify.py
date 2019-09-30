@@ -2,31 +2,38 @@ import numpy as np
 import pickle
 import os
 import re
+from knn import KNN
+import matplotlib.pyplot as plt
+
+#0.872 !!
 
 
-gestureFile1 = 'userData/train0.dat'
+
+def ReduceData(self, x):
+    return x
+
+gestureFile1 = 'savedData/train0.dat'
 pickle_in = open(gestureFile1, "rb")
 gesture_dataN = pickle.load(pickle_in)
 print(gesture_dataN.shape)
 
-gestureFile2 = 'userData/train9.dat'
-pickle_in = open(gestureFile1, "rb")
+
+gestureFile2 = 'savedData/train9.dat'
+pickle_in = open(gestureFile2, "rb")
 gesture_dataM = pickle.load(pickle_in)
 print(gesture_dataM.shape)
 
 
-gestureFile3 = 'userData/train0-2.dat'
-pickle_in = open(gestureFile1, "rb")
+gestureFile3 = 'savedData/train0-2.dat'
+pickle_in = open(gestureFile3, "rb")
 testN = pickle.load(pickle_in)
-
-
-gestureFile4 = 'userData/train9-2.dat'
-pickle_in = open(gestureFile1, "rb")
+gestureFile4 = 'savedData/train9-2.dat'
+pickle_in = open(gestureFile4, "rb")
 testM = pickle.load(pickle_in)
 
 def ReshapeData(set1,set2):
     X = np.zeros((2000,5*4*6),dtype='f')
-    Y = np.zeros((2000,5*4*6),dtype='f')
+    Y = np.zeros((2000),dtype='f')
     for row in range(0,1000):
         #here
         Y[row] = 9
@@ -43,9 +50,38 @@ def ReshapeData(set1,set2):
 trainX, trainY = ReshapeData(gesture_dataM, gesture_dataN)
 testX, testY = ReshapeData(testM, testN)
 
+
 print trainX
 print trainY
 print testX
 print testY
-# print trainX.shape
+
+trainM = ReduceData(trainX)
+trainN = ReduceData(trainY)
+testM =  ReduceData(testM)
+testN =  ReduceData(testN)
+
+print trainY.shape
+knn = KNN()
+knn.Use_K_Of(15)
+knn.Fit(trainX, trainY)
+
+
+print testX.shape
+correct_count = 0
+for row in range(0, len(trainX)):
+    # itemClass = row
+    prediction = int(knn.Predict(testX[row, :]))
+    print(str(prediction) + " " + str(testY[row]))
+    if prediction == testY[row]:
+        correct_count += 1
+
+print float(correct_count)/float(len(trainX))
+
+
+
+
+
+
+
 
