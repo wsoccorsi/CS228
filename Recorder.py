@@ -150,7 +150,7 @@ class RECORDER:
 
     def Save_Gesture(self):
 
-        gestureFile = "userData/train0-2.dat"
+        gestureFile = "userData/test0.dat"
 
 
         while path.exists(gestureFile):

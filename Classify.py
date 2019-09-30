@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 #0.872 !!
 #0.8755 after reduce data #1
 #0.933 after reduce data #2
-#0.9825
+#0.9825 after center
 
 
 
@@ -46,10 +46,10 @@ pickle_in = open(gestureFile2, "rb")
 gesture_dataM = pickle.load(pickle_in)
 
 
-gestureFile3 = 'savedData/train0-2.dat'
+gestureFile3 = 'savedData/test0.dat'
 pickle_in = open(gestureFile3, "rb")
 testN = pickle.load(pickle_in)
-gestureFile4 = 'savedData/train9-2.dat'
+gestureFile4 = 'savedData/test9.dat'
 pickle_in = open(gestureFile4, "rb")
 testM = pickle.load(pickle_in)
 
