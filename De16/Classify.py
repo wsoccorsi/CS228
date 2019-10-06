@@ -54,34 +54,44 @@ gestureFile4 = 'savedData/test9.dat'
 pickle_in = open(gestureFile4, "rb")
 testM = pickle.load(pickle_in)
 
+train2 = pickle.load(open('savedData/Apple_test2.p' , 'rb'))
+test2 =  pickle.load(open('savedData/Apple_train2.p', 'rb'))
+
 trainM = ReduceData(gesture_dataM)
 trainN = ReduceData(gesture_dataN)
 testM =  ReduceData(testM)
 testN =  ReduceData(testN)
+
+train2 = ReduceData(train2)
+test2 = ReduceData(test2)
+train2 = CenterData(train2)
+test2 = CenterData(test2)
 
 trainM = CenterData(trainM)
 trainN = CenterData(trainN)
 testM =  CenterData(testM)
 testN =  CenterData(testN)
 
-def ReshapeData(set1,set2):
-    X = np.zeros((2000,30),dtype='f')
-    Y = np.zeros((2000),dtype='f')
+def ReshapeData(set1,set2, set3):
+    X = np.zeros((3000,30),dtype='f')
+    Y = np.zeros((3000),dtype='f')
     for row in range(0,1000):
         #here
         Y[row] = 9
         Y[row+1000] = 0
+        Y[row + 2000] = 2 #de6
         col = 0
         for j in range(0,5):
             for k in range(0,2):
                 for m in range(0,3):
                     X[row, col] = set1[j, k, m, row] #top 1000
                     X[row+1000, col] = set2[j, k, m, row] #bottom 1000
+                    X[row+2000, col] = set3[j, k, m, row] #de6
                     col = col + 1
     return X, Y
 
-trainX, trainY = ReshapeData(trainM, trainN)
-testX, testY = ReshapeData(testM, testN)
+trainX, trainY = ReshapeData(trainM, trainN, train2)
+testX, testY = ReshapeData(testM, testN, test2)
 
 
 
