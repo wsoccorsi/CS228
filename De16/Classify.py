@@ -65,7 +65,7 @@ testM =  CenterData(testM)
 testN =  CenterData(testN)
 
 def ReshapeData(set1,set2):
-    X = np.zeros((2000,5*4*6),dtype='f')
+    X = np.zeros((2000,30),dtype='f')
     Y = np.zeros((2000),dtype='f')
     for row in range(0,1000):
         #here
@@ -96,13 +96,13 @@ print testX.shape
 correct_count = 0
 for row in range(0, len(trainX)):
     # itemClass = row
+    # print(testX[row, :])
     prediction = int(knn.Predict(testX[row, :]))
     print(str(prediction) + " " + str(testY[row]))
     if prediction == testY[row]:
         correct_count += 1
 
 print float(correct_count)/float(len(trainX))
-
 
 
 pickle.dump(knn, open('userData/classifier.p','wb'))
