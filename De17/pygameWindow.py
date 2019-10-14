@@ -1,5 +1,9 @@
 import pygame
 from constants import pygameWindowWidth, pygameWindowDepth
+from random import random
+from pygame.math import Vector2
+from random import randrange
+
 
 class PYGAME_WINDOW:
     def __init__(self):
@@ -23,11 +27,25 @@ class PYGAME_WINDOW:
         black = 0, 0, 0
         pygame.draw.line(self.screen, black, (xBase, yBase), (xTip, yTip), width)
 
-    def Load_Image(self, stage):
-        if stage == 0:
-            image = pygame.image.load('images/hand_over.png')
-        if stage == 1:
-            image = pygame.image.load('images/hand_')
-        else:
-            return
-        self.screen.blit(image, (pygameWindowWidth/2, 0))
+    def Adjust_Hand(self, x, y, number):
+        BLUE = pygame.Color('dodgerblue1')
+        FONT = pygame.font.Font(None, 250)
+        global fresh
+        if x < 250:
+            image =  pygame.image.load('images/move_right.jpg')
+        elif x > 450:
+            image =  pygame.image.load('images/move_left.jpg')
+        elif y < 100:
+            image =  pygame.image.load('images/move_back.jpg')
+        elif y > 300:
+            image = pygame.image.load('images/move_forward.jpg')
+        else: #if centered
+            image = FONT.render(str(number), True,BLUE)
+            self.screen.blit(image, (pygameWindowWidth / 2 + 150, 150))
+            return 1
+
+        self.screen.blit(image, (pygameWindowWidth / 2, 0))
+
+    def Put_Hand_Over(self):
+        image = pygame.image.load('images/hand_over.png')
+        self.screen.blit(image, (pygameWindowWidth / 2, 0))

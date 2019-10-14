@@ -10,12 +10,18 @@ import numpy as np
 from pygameWindow import PYGAME_WINDOW
 from constants import pygameWindowDepth, pygameWindowWidth
 from random import randint
+from random import randrange
+
+rtn_value = 0
+
 # import CenterData
 clf = pickle.load( open('userData/classifier.p','rb') )
 testData = np.zeros((1,30),dtype='f')
 pw = PYGAME_WINDOW()
 x = pygameWindowWidth - pw.screen.get_width() // 2
 y = pygameWindowDepth - pw.screen.get_height() // 2
+number = randrange(10) #run once
+
 xMin = 1000.0
 xMax = -1000.0
 yMin = 1000.0
@@ -95,6 +101,7 @@ def Handle_Finger(finger):
     # print(predictedClass)
 
 def Handle_Bone(bone, width):
+    global rtn_value
     base = bone.prev_joint
     tip  = bone.next_joint
     xBase, yBase = Handle_Vector_From_Leap(base)
@@ -102,9 +109,12 @@ def Handle_Bone(bone, width):
 
 
     pw.Draw_Black_Line(xBase, yBase, xTip, yTip, width)
-
-
-
+    rtn = pw.Adjust_Hand(xBase, yBase, number)
+    if rtn == 1 and rtn_value == 1:
+        rtn_value += 1
+        pygame.display.flip() #this first time this is correct run flip
+    else:
+        rtn_value = 0
 
 def Handle_Vector_From_Leap(v):
     global x, y, xMin, xMax, yMin, yMax
@@ -150,7 +160,8 @@ while True:
     if (len(handlist) > 0):
         Handle_Finger(frame)
     else:
-        pw.Load_Image()
+        pw.Put_Hand_Over()
 
     pw.Reveal()
     Perturb_Circle_Position()
+    pygame.display.update()
