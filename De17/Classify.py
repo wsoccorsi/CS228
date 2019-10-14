@@ -187,6 +187,7 @@ for row in range(0, len(trainX)):
     print(str(prediction) + " " + str(testY[row]) + ' ' + str(float(count)))
     count +=1
     if prediction == testY[row]:
+
         correct_count += 1
 
 print float(correct_count)/float(len(trainX))

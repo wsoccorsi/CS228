@@ -1,6 +1,7 @@
 import sys
 sys.path.insert(0,'../..')
 import Leap
+import time
 
 
 
@@ -12,7 +13,6 @@ from constants import pygameWindowDepth, pygameWindowWidth
 from random import randint
 from random import randrange
 
-rtn_value = 0
 
 # import CenterData
 clf = pickle.load( open('userData/classifier.p','rb') )
@@ -21,6 +21,7 @@ pw = PYGAME_WINDOW()
 x = pygameWindowWidth - pw.screen.get_width() // 2
 y = pygameWindowDepth - pw.screen.get_height() // 2
 number = randrange(10) #run once
+correct = False
 
 xMin = 1000.0
 xMax = -1000.0
@@ -67,7 +68,7 @@ def Handle_Frame(frame):
 
 
 def Handle_Finger(finger):
-    global x, y, xMin, xMax, yMin, yMax, testData
+    global x, y, xMin, xMax, yMin, yMax, testData, number, correct
     hand = frame.hands[0]
     fingers = hand.fingers
     k = 0
@@ -96,12 +97,17 @@ def Handle_Finger(finger):
 
             Handle_Bone(bone, w)
 
-    # testData = CenterData(testData)
-    # predictedClass = clf.Predict(testData)
-    # print(predictedClass)
+    testData = CenterData(testData)
+    predictedClass = clf.Predict(testData)
+    print(predictedClass)
+    if predictedClass == number:
+        image = pygame.image.load('images/old_guy_correct.jpg')
+        pw.screen.blit(image, (0, 0))
+        correct = True
+
+
 
 def Handle_Bone(bone, width):
-    global rtn_value
     base = bone.prev_joint
     tip  = bone.next_joint
     xBase, yBase = Handle_Vector_From_Leap(base)
@@ -109,12 +115,8 @@ def Handle_Bone(bone, width):
 
 
     pw.Draw_Black_Line(xBase, yBase, xTip, yTip, width)
-    rtn = pw.Adjust_Hand(xBase, yBase, number)
-    if rtn == 1 and rtn_value == 1:
-        rtn_value += 1
-        pygame.display.flip() #this first time this is correct run flip
-    else:
-        rtn_value = 0
+    pw.Adjust_Hand(xBase, yBase, number)
+
 
 def Handle_Vector_From_Leap(v):
     global x, y, xMin, xMax, yMin, yMax
@@ -162,6 +164,8 @@ while True:
     else:
         pw.Put_Hand_Over()
 
+
     pw.Reveal()
     Perturb_Circle_Position()
     pygame.display.update()
+

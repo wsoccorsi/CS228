@@ -40,12 +40,16 @@ class PYGAME_WINDOW:
         elif y > 300:
             image = pygame.image.load('images/move_forward.jpg')
         else: #if centered
+            image = pygame.image.load('images/nothing.png')
+            self.screen.blit(image, (pygameWindowWidth / 2 , 0))
+
             image = FONT.render(str(number), True,BLUE)
-            self.screen.blit(image, (pygameWindowWidth / 2 + 150, 150))
+            self.screen.blit(image, (pygameWindowWidth / 2 + 150, pygameWindowDepth/2))
             return 1
 
         self.screen.blit(image, (pygameWindowWidth / 2, 0))
 
+        return 0
     def Put_Hand_Over(self):
         image = pygame.image.load('images/hand_over.png')
         self.screen.blit(image, (pygameWindowWidth / 2, 0))
