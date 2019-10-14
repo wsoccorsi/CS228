@@ -23,6 +23,11 @@ class PYGAME_WINDOW:
         black = 0, 0, 0
         pygame.draw.line(self.screen, black, (xBase, yBase), (xTip, yTip), width)
 
-    def Load_Image(self):
-        hand_over = pygame.image.load('images/hand_over.png')
-        self.screen.blit(hand_over, (pygameWindowWidth/2, 0))
+    def Load_Image(self, stage):
+        if stage == 0:
+            image = pygame.image.load('images/hand_over.png')
+        if stage == 1:
+            image = pygame.image.load('images/hand_')
+        else:
+            return
+        self.screen.blit(image, (pygameWindowWidth/2, 0))
