@@ -1,4 +1,5 @@
-
+import sys
+sys.path.insert(0,'..')
 from constants import pygameWindowDepth, pygameWindowWidth
 from random import randint
 import Leap

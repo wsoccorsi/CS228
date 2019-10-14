@@ -1,14 +1,18 @@
 import sys
-sys.path.insert(0,'..')
+sys.path.insert(0,'../..')
 import Leap
 
 
 
 import pygame
+import pickle
+import numpy as np
 from pygameWindow import PYGAME_WINDOW
 from constants import pygameWindowDepth, pygameWindowWidth
 from random import randint
-
+# import CenterData
+clf = pickle.load( open('userData/classifier.p','rb') )
+testData = np.zeros((1,30),dtype='f')
 pw = PYGAME_WINDOW()
 x = pygameWindowWidth - pw.screen.get_width() // 2
 y = pygameWindowDepth - pw.screen.get_height() // 2
@@ -16,6 +20,22 @@ xMin = 1000.0
 xMax = -1000.0
 yMin = 1000.0
 yMax = -1000.0
+
+
+def CenterData(testData):
+    allXCoordinates = testData[0,::3]
+    meanValue = allXCoordinates.mean()
+    testData[0, ::3] = allXCoordinates - meanValue
+
+    allYCoordinates = testData[0,1::3]
+    meanValue = allYCoordinates.mean()
+    testData[0, 1::3] = allYCoordinates - meanValue
+
+    allZCoordinates = testData[0,2::3]
+    meanValue = allZCoordinates.mean()
+    testData[0, 2::3] = allZCoordinates - meanValue
+
+    return testData
 
 def Perturb_Circle_Position():
     fourSidedDieRoll = randint(1,4)
@@ -41,9 +61,10 @@ def Handle_Frame(frame):
 
 
 def Handle_Finger(finger):
-    global x, y, xMin, xMax, yMin, yMax
+    global x, y, xMin, xMax, yMin, yMax, testData
     hand = frame.hands[0]
     fingers = hand.fingers
+    k = 0
     for finger in fingers:
         for b in range(0, 4):
             w = 3
@@ -58,15 +79,28 @@ def Handle_Finger(finger):
                 bone = finger.bone(Leap.Bone.TYPE_DISTAL)
                 #w = 1
 
+            tip = bone.next_joint
+            xTip, yTip, zTip = tip[0], tip[1], tip[2]
+            if ((b == 0) or (b == 3)):
+                testData[0, k] = xTip
+                testData[0, k + 1] = yTip
+                testData[0, k + 2] = zTip
+                k = k + 3
+
+
             Handle_Bone(bone, w)
 
-
+    testData = CenterData(testData)
+    predictedClass = clf.Predict(testData)
+    print(predictedClass)
 
 def Handle_Bone(bone, width):
     base = bone.prev_joint
     tip  = bone.next_joint
     xBase, yBase = Handle_Vector_From_Leap(base)
     xTip, yTip = Handle_Vector_From_Leap(tip)
+
+
     pw.Draw_Black_Line(xBase, yBase, xTip, yTip, width)
 
 
@@ -85,8 +119,8 @@ def Handle_Vector_From_Leap(v):
         yMax = y
 
     pygameX = Scaled(x, xMin, xMax, 0, pygameWindowWidth)
-    pygameY = Scaled(y, yMin, yMax, pygameWindowDepth, 0)  # my genius inversion tactic
-    return pygameX, pygameY
+    pygameY = Scaled(y, yMin, yMax, 0, pygameWindowDepth)  # my genius inversion tactic
+    return pygameX, pygameY,
 
 
 
@@ -112,7 +146,6 @@ while True:
 
     if (len(handlist) > 0):
         Handle_Finger(frame)
-
 
     pw.Reveal()
     Perturb_Circle_Position()
