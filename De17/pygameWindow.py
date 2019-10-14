@@ -22,3 +22,7 @@ class PYGAME_WINDOW:
     def Draw_Black_Line(self, xBase, yBase, xTip, yTip, width):
         black = 0, 0, 0
         pygame.draw.line(self.screen, black, (xBase, yBase), (xTip, yTip), width)
+
+    def Load_Image(self):
+        hand_over = pygame.image.load('images/hand_over.png')
+        self.screen.blit(hand_over, (pygameWindowWidth/2, 0))

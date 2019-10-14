@@ -90,9 +90,9 @@ def Handle_Finger(finger):
 
             Handle_Bone(bone, w)
 
-    testData = CenterData(testData)
-    predictedClass = clf.Predict(testData)
-    print(predictedClass)
+    # testData = CenterData(testData)
+    # predictedClass = clf.Predict(testData)
+    # print(predictedClass)
 
 def Handle_Bone(bone, width):
     base = bone.prev_joint
@@ -102,6 +102,8 @@ def Handle_Bone(bone, width):
 
 
     pw.Draw_Black_Line(xBase, yBase, xTip, yTip, width)
+
+
 
 
 def Handle_Vector_From_Leap(v):
@@ -118,8 +120,8 @@ def Handle_Vector_From_Leap(v):
     if (y > yMax):
         yMax = y
 
-    pygameX = Scaled(x, xMin, xMax, 0, pygameWindowWidth)
-    pygameY = Scaled(y, yMin, yMax, 0, pygameWindowDepth)  # my genius inversion tactic
+    pygameX = Scaled(x, xMin, xMax, 0, pygameWindowWidth/2)
+    pygameY = Scaled(y, yMin, yMax, 0, pygameWindowDepth/2)  # my genius inversion tactic
     return pygameX, pygameY,
 
 
@@ -144,8 +146,11 @@ while True:
     frame = controller.frame() #frame grab
     handlist = frame.hands
 
+
     if (len(handlist) > 0):
         Handle_Finger(frame)
+    else:
+        pw.Load_Image()
 
     pw.Reveal()
     Perturb_Circle_Position()
