@@ -22,10 +22,11 @@ x = pygameWindowWidth - pw.screen.get_width() // 2
 y = pygameWindowDepth - pw.screen.get_height() // 2
 number = randrange(10) #run once
 correct = False
+lastCorrect = False
 
-xMin = 1000.0
+xMin =  1000.0
 xMax = -1000.0
-yMin = 1000.0
+yMin =  1000.0
 yMax = -1000.0
 
 
@@ -81,10 +82,10 @@ def Handle_Finger(finger):
                 bone = finger.bone(Leap.Bone.TYPE_PROXIMAL)
             elif b == 2:
                 bone = finger.bone(Leap.Bone.TYPE_INTERMEDIATE)
-                #w=2
+                w=2
             elif b ==3:
                 bone = finger.bone(Leap.Bone.TYPE_DISTAL)
-                #w = 1
+                w = 1
 
             tip = bone.next_joint
             xTip, yTip, zTip = tip[0], tip[1], tip[2]
@@ -101,9 +102,14 @@ def Handle_Finger(finger):
     predictedClass = clf.Predict(testData)
     print(predictedClass)
     if predictedClass == number:
-        image = pygame.image.load('images/old_guy_correct.jpg')
-        pw.screen.blit(image, (0, 0))
+
+        pw.Prepare()
+        image = pygame.image.load('images/iconmonstr-check-mark-1.png')
+        pw.screen.blit(image, (pygameWindowWidth/2 + 100, 150))
+        pw.Reveal()
+        pygame.display.update()
         correct = True
+        number = randrange(10)
 
 
 
@@ -169,3 +175,10 @@ while True:
     Perturb_Circle_Position()
     pygame.display.update()
 
+    if lastCorrect == True:
+        lastCorrect = False
+        time.sleep(3)
+
+    if correct:
+        lastCorrect = True
+        correct = False

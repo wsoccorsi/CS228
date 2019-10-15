@@ -47,6 +47,8 @@ class PYGAME_WINDOW:
             self.screen.blit(image, (pygameWindowWidth / 2 + 150, pygameWindowDepth/2))
             return 1
 
+        rfrsh = pygame.image.load('images/nothing.png')
+        self.screen.blit(rfrsh, (pygameWindowWidth /2, pygameWindowDepth/2))
         self.screen.blit(image, (pygameWindowWidth / 2, 0))
 
         return 0
