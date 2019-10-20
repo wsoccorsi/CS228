@@ -27,9 +27,11 @@ class PYGAME_WINDOW:
         black = 0, 0, 0
         pygame.draw.line(self.screen, black, (xBase, yBase), (xTip, yTip), width)
 
-    def Adjust_Hand(self, x, y, number):
+    def Adjust_Hand(self, x, y, number, attempts):
         BLUE = pygame.Color('dodgerblue1')
         FONT = pygame.font.Font(None, 250)
+        FONT2 = pygame.font.Font(None, 100)
+
         if x < 250:
             image =  pygame.image.load('images/move_right.jpg')
         elif x > 450:
@@ -43,7 +45,11 @@ class PYGAME_WINDOW:
             self.screen.blit(image, (pygameWindowWidth / 2 , 0))
 
             image = FONT.render(str(number), True,BLUE)
-            self.screen.blit(image, (pygameWindowWidth / 2 + 150, pygameWindowDepth/2))
+            self.screen.blit(image, (pygameWindowWidth / 2 + 150, pygameWindowDepth/2 + 100))
+
+            print(attempts)
+            image = FONT2.render('Attempts: ' + str(attempts), True, BLUE)
+            self.screen.blit(image, (pygameWindowWidth / 2 , pygameWindowDepth / 2))
             return 1
 
         rfrsh = pygame.image.load('images/nothing.png')

@@ -2,7 +2,7 @@ import sys
 sys.path.insert(0,'../..')
 import Leap
 import time
-
+import Dict
 
 
 import pygame
@@ -21,13 +21,18 @@ pw = PYGAME_WINDOW()
 x = pygameWindowWidth - pw.screen.get_width() // 2
 y = pygameWindowDepth - pw.screen.get_height() // 2
 number = randrange(10) #run once
+
 correct = False
 lastCorrect = False
+start = True
+userName = ''
+database = {}
 
 xMin =  1000.0
 xMax = -1000.0
 yMin =  1000.0
 yMax = -1000.0
+
 
 
 def CenterData(testData):
@@ -69,7 +74,7 @@ def Handle_Frame(frame):
 
 
 def Handle_Finger(finger):
-    global x, y, xMin, xMax, yMin, yMax, testData, number, correct
+    global x, y, xMin, xMax, yMin, yMax, testData, number, correct, database
     hand = frame.hands[0]
     fingers = hand.fingers
     k = 0
@@ -95,11 +100,11 @@ def Handle_Finger(finger):
                 testData[0, k + 2] = zTip
                 k = k + 3
 
-
             Handle_Bone(bone, w)
 
     testData = CenterData(testData)
     predictedClass = clf.Predict(testData)
+
     if predictedClass == number:
 
         pw.Prepare()
@@ -109,10 +114,11 @@ def Handle_Finger(finger):
         pygame.display.update()
         correct = True
         number = randrange(10)
-
+        database = Dict.input_database_sign(userName, 'digit' + str(number) + 'attempted')
 
 
 def Handle_Bone(bone, width):
+    global database
     base = bone.prev_joint
     tip  = bone.next_joint
     xBase, yBase = Handle_Vector_From_Leap(base)
@@ -120,7 +126,7 @@ def Handle_Bone(bone, width):
 
 
     pw.Draw_Black_Line(xBase, yBase, xTip, yTip, width)
-    pw.Adjust_Hand(xBase, yBase, number)
+    pw.Adjust_Hand(xBase, yBase, number, database[userName]['digit'  + str(number) + 'attempted'])
 
 
 def Handle_Vector_From_Leap(v):
@@ -162,6 +168,12 @@ while True:
     pw.Prepare()
     frame = controller.frame() #frame grab
     handlist = frame.hands
+
+    #database handle start
+    if start:
+        userName = Dict.init_database()
+        database = Dict.input_database_sign(userName, 'digit' + str(number) + 'attempted')
+        start = False
 
 
     if (len(handlist) > 0):
