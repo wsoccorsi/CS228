@@ -30,7 +30,6 @@ class PYGAME_WINDOW:
     def Adjust_Hand(self, x, y, number):
         BLUE = pygame.Color('dodgerblue1')
         FONT = pygame.font.Font(None, 250)
-        global fresh
         if x < 250:
             image =  pygame.image.load('images/move_right.jpg')
         elif x > 450:

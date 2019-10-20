@@ -100,7 +100,6 @@ def Handle_Finger(finger):
 
     testData = CenterData(testData)
     predictedClass = clf.Predict(testData)
-    print(predictedClass)
     if predictedClass == number:
 
         pw.Prepare()
@@ -173,7 +172,7 @@ while True:
 
     pw.Reveal()
     Perturb_Circle_Position()
-    pygame.display.update()
+    # pygame.display.update()
 
     if lastCorrect == True:
         lastCorrect = False
