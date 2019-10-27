@@ -63,7 +63,8 @@ class PYGAME_WINDOW:
                 image = pygame.image.load('images/Hand8.png')
             elif number == 9:
                 image = pygame.image.load('images/Hand9.png')
-
+            if attempts > 2:
+                image = FONT2.render(str(number), True, BLUE)
             # image = FONT.render(str(number), True,BLUE)
             self.screen.blit(image, (pygameWindowWidth / 2 + 150, pygameWindowDepth/2 + 100))
 

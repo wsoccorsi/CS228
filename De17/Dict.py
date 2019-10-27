@@ -25,7 +25,7 @@ def init_database():
         print('welcome ' + userName + '.')
 
     pickle.dump(database,open('userData/database.p','wb'))
-    return userName
+    return userName, database
 
 def input_database_sign(userName, signTryed):
     database = pickle.load(open('userData/database.p', 'rb'))

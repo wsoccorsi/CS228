@@ -113,8 +113,8 @@ def Handle_Finger(finger):
         pw.Reveal()
         pygame.display.update()
         correct = True
-        number = randrange(10)
         database = Dict.input_database_sign(userName, 'digit' + str(number) + 'attempted')
+        number = randrange(10)
 
 
 def Handle_Bone(bone, width):
@@ -171,8 +171,8 @@ while True:
 
     #database handle start
     if start:
-        userName = Dict.init_database()
-        database = Dict.input_database_sign(userName, 'digit' + str(number) + 'attempted')
+        userName, database = Dict.init_database()
+        # database = Dict.input_database_sign(userName, 'digit' + str(number) + 'attempted')
         start = False
 
 
