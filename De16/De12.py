@@ -90,9 +90,9 @@ def Handle_Finger(finger):
 
             Handle_Bone(bone, w)
 
-    testData = CenterData(testData)
-    predictedClass = clf.Predict(testData)
-    print(predictedClass)
+    # testData = CenterData(testData)
+    # predictedClass = clf.Predict(testData)
+    # print(predictedClass)
 
 def Handle_Bone(bone, width):
     base = bone.prev_joint

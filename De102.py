@@ -53,10 +53,10 @@ def Handle_Finger(finger):
                 bone = finger.bone(Leap.Bone.TYPE_PROXIMAL)
             elif b == 2:
                 bone = finger.bone(Leap.Bone.TYPE_INTERMEDIATE)
-                #w=2
+                w=2
             elif b ==3:
                 bone = finger.bone(Leap.Bone.TYPE_DISTAL)
-                #w = 1
+                w = 1
 
             Handle_Bone(bone, w)
 

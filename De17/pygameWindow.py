@@ -43,11 +43,31 @@ class PYGAME_WINDOW:
         else: #if centered
             image = pygame.image.load('images/nothing.png')
             self.screen.blit(image, (pygameWindowWidth / 2 , 0))
+            if number == 0:
+                image = pygame.image.load('images/Hand0.png')
+            elif number == 1:
+                image = pygame.image.load('images/Hand1.png')
+            elif number == 2:
+                image = pygame.image.load('images/Hand2.png')
+            elif number == 3:
+                image = pygame.image.load('images/Hand3.png')
+            elif number == 4:
+                image = pygame.image.load('images/Hand4.png')
+            elif number == 5:
+                image = pygame.image.load('images/Hand5.png')
+            elif number == 6:
+                image = pygame.image.load('images/Hand6.png')
+            elif number == 7:
+                image = pygame.image.load('images/Hand7.png')
+            elif number == 8:
+                image = pygame.image.load('images/Hand8.png')
+            elif number == 9:
+                image = pygame.image.load('images/Hand9.png')
 
-            image = FONT.render(str(number), True,BLUE)
+            # image = FONT.render(str(number), True,BLUE)
             self.screen.blit(image, (pygameWindowWidth / 2 + 150, pygameWindowDepth/2 + 100))
 
-            print(attempts)
+            # print(attempts)
             image = FONT2.render('Attempts: ' + str(attempts), True, BLUE)
             self.screen.blit(image, (pygameWindowWidth / 2 , pygameWindowDepth / 2))
             return 1
