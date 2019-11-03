@@ -157,7 +157,7 @@ def Handle_Bone(bone, width):
 
     pw.Draw_Black_Line(xBase, yBase, xTip, yTip, width)
 
-    pw.Adjust_Hand(xBase, yBase, number, database[userName]['digit' + str(number) + 'attempted'])
+    # pw.Adjust_Hand(xBase, yBase, number, database[userName]['digit' + str(number) + 'attempted'])
 
 
 def Handle_Vector_From_Leap(v):
@@ -211,8 +211,18 @@ while True:
 
     if (len(handlist) > 0):
         Handle_Finger(frame)
+        if correct == False:
+            pw.Adjust_Hand(xBase, yBase, number, database[userName]['digit' + str(number) + 'attempted'])
     else:
         pw.Put_Hand_Over()
+
+    hand = frame.hands[0]
+    finger = hand.fingers[2]
+    bone = finger.bone(0)
+    base = bone.prev_joint
+    xBase, yBase = Handle_Vector_From_Leap(base)
+
+
 
 
     pw.Reveal()
@@ -221,8 +231,9 @@ while True:
 
     if lastCorrect == True:
         lastCorrect = False
-        time.sleep(2)
+        time.sleep(3)
         number = lastNumber
+
 
     if correct:
         lastCorrect = True

@@ -127,7 +127,6 @@ def Handle_Bone(bone, width):
 
 
     pw.Draw_Black_Line(xBase, yBase, xTip, yTip, width)
-    pw.Adjust_Hand(xBase, yBase, number, database[userName]['digit'  + str(number) + 'attempted'])
 
 
 def Handle_Vector_From_Leap(v):
@@ -182,6 +181,7 @@ while True:
     else:
         pw.Put_Hand_Over()
 
+    pw.Adjust_Hand(frame.hands[0], number, database[userName]['digit'  + str(number) + 'attempted'])
 
     pw.Reveal()
     Perturb_Circle_Position()

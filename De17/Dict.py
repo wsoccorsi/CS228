@@ -23,7 +23,18 @@ def init_database():
                                'digit7attempted': 0,
                                'digit8attempted': 0,
                                'digit9attempted': 0,
-                               'digit10attempted': 0,}
+                               'digit10attempted': 0,
+                               'mean0time': 0,
+                               'mean1time' : 0,
+                               'mean2time' : 0,
+                               'mean3time' : 0,
+                               'mean4time' : 0,
+                               'mean5time' : 0,
+                               'mean6time' : 0,
+                               'mean7time' : 0,
+                               'mean8time' : 0,
+                               'mean9time' : 0,
+                               }
 
         print('welcome ' + userName + '.')
 

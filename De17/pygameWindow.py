@@ -29,16 +29,15 @@ class PYGAME_WINDOW:
 
     def Adjust_Hand(self, x, y, number, attempts):
         BLUE = pygame.Color('dodgerblue1')
-        FONT = pygame.font.Font(None, 250)
         FONT2 = pygame.font.Font(None, 100)
 
-        if x < 250:
+        if x < 200:
             image =  pygame.image.load('images/move_right.jpg')
-        elif x > 450:
+        elif x > 300:
             image =  pygame.image.load('images/move_left.jpg')
-        elif y < 100:
+        elif y < 300:
             image =  pygame.image.load('images/move_back.jpg')
-        elif y > 300:
+        elif y > 400:
             image = pygame.image.load('images/move_forward.jpg')
         else: #if centered
             image = pygame.image.load('images/nothing.png')
@@ -67,19 +66,19 @@ class PYGAME_WINDOW:
                 image = pygame.image.load('images/nothing.png')
             if attempts > 1:
                 image = FONT2.render(str(number), True, BLUE)
-            # image = FONT.render(str(number), True,BLUE)
+
             self.screen.blit(image, (pygameWindowWidth / 2 + 150, pygameWindowDepth/2 + 100))
 
             # print(attempts)
-            image = FONT2.render('Attempts: ' + str(int(attempts)), True, BLUE)
+            image = FONT2.render('Attempts: ' + str(int(attempts)), True, BLUE) #whhat is going on here
             self.screen.blit(image, (pygameWindowWidth / 2 , pygameWindowDepth / 2))
-            return 1
 
+            return 1
         rfrsh = pygame.image.load('images/nothing.png')
         self.screen.blit(rfrsh, (pygameWindowWidth /2, pygameWindowDepth/2))
         self.screen.blit(image, (pygameWindowWidth / 2, 0))
-
         return 0
+
     def Put_Hand_Over(self):
         image = pygame.image.load('images/hand_over.png')
         self.screen.blit(image, (pygameWindowWidth / 2, 0))
