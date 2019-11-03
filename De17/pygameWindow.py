@@ -3,6 +3,7 @@ from constants import pygameWindowWidth, pygameWindowDepth
 from random import random
 from pygame.math import Vector2
 from random import randrange
+import math
 
 
 class PYGAME_WINDOW:
@@ -27,9 +28,10 @@ class PYGAME_WINDOW:
         black = 0, 0, 0
         pygame.draw.line(self.screen, black, (xBase, yBase), (xTip, yTip), width)
 
-    def Adjust_Hand(self, x, y, number, attempts):
+    def Adjust_Hand(self, x, y, number, attempts, avgTime, currentTime):
         BLUE = pygame.Color('dodgerblue1')
         FONT2 = pygame.font.Font(None, 100)
+        FONT3 = pygame.font.Font(None, 40)
 
         if x < 200:
             image =  pygame.image.load('images/move_right.jpg')
@@ -70,8 +72,18 @@ class PYGAME_WINDOW:
             self.screen.blit(image, (pygameWindowWidth / 2 + 150, pygameWindowDepth/2 + 100))
 
             # print(attempts)
-            image = FONT2.render('Attempts: ' + str(int(attempts)), True, BLUE) #whhat is going on here
+            image = FONT2.render('Attempts: ' + str(int(attempts)), True, BLUE)
             self.screen.blit(image, (pygameWindowWidth / 2 , pygameWindowDepth / 2))
+
+            if avgTime == 0:
+                image = FONT3.render('Avg Time: ' + str("Not Set"), True, BLUE)
+            else:
+                image = FONT3.render('Avg Time: ' + str(int(math.floor(avgTime))), True, BLUE)
+
+            self.screen.blit(image, (pygameWindowWidth/2 - 300, pygameWindowDepth / 2+ 200))
+
+            image = FONT3.render('Crrent Time: ' + str(int(math.floor(currentTime))), True, BLUE)
+            self.screen.blit(image, (pygameWindowWidth/2 - 300, pygameWindowDepth / 2 + 300))
 
             return 1
         rfrsh = pygame.image.load('images/nothing.png')

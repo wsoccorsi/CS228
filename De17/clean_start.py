@@ -106,7 +106,6 @@ def Handle_Finger(finger):
     predictedClass = clf.Predict(testData)
     print(predictedClass)
     if predictedClass == number:
-        print('called')
         pw.Prepare()
         image = pygame.image.load('images/iconmonstr-check-mark-1.png')
         pw.screen.blit(image, (pygameWindowWidth/2 + 100, 150))

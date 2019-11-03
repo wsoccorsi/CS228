@@ -32,6 +32,7 @@ start = True
 userName = ''
 database = {}
 startTime = timer()
+end = 0
 
 xMin =  1000.0
 xMax = -1000.0
@@ -79,7 +80,7 @@ def Handle_Frame(frame):
 
 
 def Handle_Finger(finger):
-    global x, y, xMin, xMax, yMin, yMax, testData, number, correct, database, startTime, lastNumber
+    global x, y, xMin, xMax, yMin, yMax, testData, number, correct, database, startTime, lastNumber, end
     hand = frame.hands[0]
     fingers = hand.fingers
     k = 0
@@ -110,12 +111,10 @@ def Handle_Finger(finger):
     testData = CenterData(testData)
     predictedClass = clf.Predict(testData)
     end = timer()
-    if end - startTime > max(5, 10 - database[userName]['digit' + str(number) + 'attempted']):
-        image = pygame.image.load('images/look_at_the_time.png')
-        pw.screen.blit(image, (pygameWindowWidth/2 + 200, 0))
-        if end - startTime > max(10, (15 - database[userName]['digit' + str(number) + 'attempted'])): #if the start time is over 20 then pick a new number
-            number = randrange(10)
-            startTime = timer()
+
+    if end - startTime > max(10, (15 - database[userName]['digit' + str(number) + 'attempted'])): #if the start time is over 20 then pick a new number
+        database = Dict.update_database_time(userName, 'mean' + str(number) + 'time', end-startTime)
+        number = randrange(10)
 
     if predictedClass == number:
         #show check mark
@@ -128,8 +127,13 @@ def Handle_Finger(finger):
         #correct handle
         correct = True
 
+        #find the time taken to sign
+        timeTaken = end - startTime
+
+
         #increment the digit signed and start the timer for the next digit
         database = Dict.input_database_sign(userName, 'digit' + str(number) + 'attempted')
+        database = Dict.update_database_time(userName, 'mean' + str(number) + 'time', timeTaken)
         startTime = timer()
         lastNumber = number
 
@@ -157,7 +161,6 @@ def Handle_Bone(bone, width):
 
     pw.Draw_Black_Line(xBase, yBase, xTip, yTip, width)
 
-    # pw.Adjust_Hand(xBase, yBase, number, database[userName]['digit' + str(number) + 'attempted'])
 
 
 def Handle_Vector_From_Leap(v):
@@ -212,7 +215,12 @@ while True:
     if (len(handlist) > 0):
         Handle_Finger(frame)
         if correct == False:
-            pw.Adjust_Hand(xBase, yBase, number, database[userName]['digit' + str(number) + 'attempted'])
+            if number != 10: #10 is equivalent to a void number
+                pw.Adjust_Hand(xBase, yBase, number, database[userName]['digit' + str(number) + 'attempted'],
+                               database[userName]['mean'+str(number)+'time'], end - startTime)
+                if end - startTime > max(5, 10 - database[userName]['digit' + str(number) + 'attempted']):
+                    image = pygame.image.load('images/look_at_the_time.png')
+                    pw.screen.blit(image, (pygameWindowWidth / 2 + 200, 0))
     else:
         pw.Put_Hand_Over()
 
@@ -232,6 +240,8 @@ while True:
     if lastCorrect == True:
         lastCorrect = False
         time.sleep(3)
+        startTime = timer()
+
         number = lastNumber
 
 

@@ -24,6 +24,8 @@ def init_database():
                                'digit8attempted': 0,
                                'digit9attempted': 0,
                                'digit10attempted': 0,
+
+                               #im aware this is bad code and I should refactor my dict but im lazy!
                                'mean0time': 0,
                                'mean1time' : 0,
                                'mean2time' : 0,
@@ -44,7 +46,13 @@ def init_database():
 def input_database_sign(userName, signTryed):
     database = pickle.load(open('userData/database.p', 'rb'))
     database[userName][signTryed] += 1
-
     pickle.dump(database,open('userData/database.p','wb'))
 
     return dict(database) #time_attempted
+
+def update_database_time(userName, signTryed, timeTaken):
+    database = pickle.load(open('userData/database.p', 'rb'))
+    database[userName][signTryed] = (database[userName][signTryed] + timeTaken)/database[userName][signTryed] if database[userName][signTryed] != 0 else timeTaken
+    pickle.dump(database,open('userData/database.p','wb'))
+
+    return database
