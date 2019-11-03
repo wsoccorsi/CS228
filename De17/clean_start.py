@@ -11,7 +11,6 @@ import numpy as np
 from pygameWindow import PYGAME_WINDOW
 from constants import pygameWindowDepth, pygameWindowWidth
 from random import randint
-from timeit import default_timer as timer
 from random import randrange
 
 
@@ -21,17 +20,13 @@ testData = np.zeros((1,30),dtype='f')
 pw = PYGAME_WINDOW()
 x = pygameWindowWidth - pw.screen.get_width() // 2
 y = pygameWindowDepth - pw.screen.get_height() // 2
-number = 0 #run once
+number = randrange(10) #run once
 lastNumber = number
-
-pauseCheckStart = 0
-pauseCheckEnd = 0
 correct = False
 lastCorrect = False
 start = True
 userName = ''
 database = {}
-startTime = timer()
 
 xMin =  1000.0
 xMax = -1000.0
@@ -79,7 +74,7 @@ def Handle_Frame(frame):
 
 
 def Handle_Finger(finger):
-    global x, y, xMin, xMax, yMin, yMax, testData, number, correct, database, startTime, lastNumber
+    global x, y, xMin, xMax, yMin, yMax, testData, number, correct, database, lastNumber
     hand = frame.hands[0]
     fingers = hand.fingers
     k = 0
@@ -109,42 +104,18 @@ def Handle_Finger(finger):
 
     testData = CenterData(testData)
     predictedClass = clf.Predict(testData)
-    end = timer()
-    if end - startTime > max(5, 10 - database[userName]['digit' + str(number) + 'attempted']):
-        image = pygame.image.load('images/look_at_the_time.png')
-        pw.screen.blit(image, (pygameWindowWidth/2 + 200, 0))
-        if end - startTime > max(10, (15 - database[userName]['digit' + str(number) + 'attempted'])): #if the start time is over 20 then pick a new number
-            number = randrange(10)
-            startTime = timer()
-
+    print(predictedClass)
     if predictedClass == number:
-        #show check mark
+        print('called')
         pw.Prepare()
         image = pygame.image.load('images/iconmonstr-check-mark-1.png')
         pw.screen.blit(image, (pygameWindowWidth/2 + 100, 150))
         pw.Reveal()
         pygame.display.update()
-
-        #correct handle
         correct = True
-
-        #increment the digit signed and start the timer for the next digit
         database = Dict.input_database_sign(userName, 'digit' + str(number) + 'attempted')
-        startTime = timer()
         lastNumber = number
-
-        #if I've signed this one correct four times get a new number
-        if database[userName]['digit' + str(number) + 'attempted'] > 3:
-            sorted_dict = sorted(database[userName].items(), key=lambda kv: kv[1])[0] #grab the lowest signed number
-            number = int(sorted_dict[0][len('digit'):len('digit')+1])
-            lastNumber = number #?
-
         number = 10 #disable number
-
-
-
-
-
 
 
 def Handle_Bone(bone, width):
@@ -156,8 +127,7 @@ def Handle_Bone(bone, width):
 
 
     pw.Draw_Black_Line(xBase, yBase, xTip, yTip, width)
-
-    pw.Adjust_Hand(xBase, yBase, number, database[userName]['digit' + str(number) + 'attempted'])
+    pw.Adjust_Hand(xBase, yBase, number, database[userName]['digit'  + str(number) + 'attempted'])
 
 
 def Handle_Vector_From_Leap(v):
@@ -203,14 +173,12 @@ while True:
     #database handle start
     if start:
         userName, database = Dict.init_database()
-        sorted_dict = sorted(database[userName].items(), key=lambda kv: kv[1])[0]  # grab the lowest signed number
-        number = int(sorted_dict[0][len('digit'):len('digit')+1])
-
+        # database = Dict.input_database_sign(userName, 'digit' + str(number) + 'attempted')
         start = False
 
 
     if (len(handlist) > 0):
-        Handle_Finger(frame)
+        Handle_Finger(frame) #how can I freeze this code after a correct ans
     else:
         pw.Put_Hand_Over()
 
@@ -221,12 +189,9 @@ while True:
 
     if lastCorrect == True:
         lastCorrect = False
-        time.sleep(2)
+        time.sleep(3)
         number = lastNumber
 
     if correct:
         lastCorrect = True
         correct = False
-
-
-
