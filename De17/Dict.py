@@ -24,7 +24,7 @@ def init_database():
                                'digit8attempted': 0,
                                'digit9attempted': 0,
                                'digit10attempted': 0,
-
+                                'time' : {
                                #im aware this is bad code and I should refactor my dict but im lazy!
                                'mean0time': 0,
                                'mean1time' : 0,
@@ -36,6 +36,18 @@ def init_database():
                                'mean7time' : 0,
                                'mean8time' : 0,
                                'mean9time' : 0,
+
+                               'total0time': 0,
+                               'total1time': 0,
+                               'total2time': 0,
+                               'total3time': 0,
+                               'total4time': 0,
+                               'total5time': 0,
+                               'total6time': 0,
+                               'total7time': 0,
+                               'total8time': 0,
+                               'total9time': 0,
+                                }
                                }
 
         print('welcome ' + userName + '.')
@@ -50,9 +62,12 @@ def input_database_sign(userName, signTryed):
 
     return dict(database) #time_attempted
 
-def update_database_time(userName, signTryed, timeTaken):
+def update_database_time(userName, signTryed, timeTaken, signTryed2, dAttempted):
     database = pickle.load(open('userData/database.p', 'rb'))
-    database[userName][signTryed] = (database[userName][signTryed] + timeTaken)/database[userName][signTryed] if database[userName][signTryed] != 0 else timeTaken
+    database[userName]['time'][signTryed2] += timeTaken
+    database[userName]['time'][signTryed] = (database[userName]['time'][signTryed2])/database[userName][dAttempted] if database[userName]['time'][signTryed] != 0 else timeTaken
+    print(database[userName]['time'][signTryed2]/database[userName]['time'][signTryed])
+
     pickle.dump(database,open('userData/database.p','wb'))
 
     return database

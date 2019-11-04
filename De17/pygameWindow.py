@@ -82,7 +82,7 @@ class PYGAME_WINDOW:
 
             self.screen.blit(image, (pygameWindowWidth/2 - 300, pygameWindowDepth / 2+ 200))
 
-            image = FONT3.render('Crrent Time: ' + str(int(math.floor(currentTime))), True, BLUE)
+            image = FONT3.render('Current Time: ' + str(int(math.floor(currentTime))), True, BLUE)
             self.screen.blit(image, (pygameWindowWidth/2 - 300, pygameWindowDepth / 2 + 300))
 
             return 1
