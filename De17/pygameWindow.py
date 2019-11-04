@@ -28,10 +28,16 @@ class PYGAME_WINDOW:
         black = 0, 0, 0
         pygame.draw.line(self.screen, black, (xBase, yBase), (xTip, yTip), width)
 
-    def Adjust_Hand(self, x, y, number, attempts, avgTime, currentTime):
+    def Adjust_Hand(self, x, y, number, attempts, avgTime, currentTime, topTimeSigned):
         BLUE = pygame.Color('dodgerblue1')
         FONT2 = pygame.font.Font(None, 100)
         FONT3 = pygame.font.Font(None, 40)
+
+        if number != 10:
+            sorted_times = sorted(topTimeSigned[str(number)].items(), key=lambda kv: kv[1])  # grab the lowest signed number
+            print(sorted_times)
+        else:
+            sorted_times = []
 
         if x < 200:
             image =  pygame.image.load('images/move_right.jpg')
@@ -84,6 +90,16 @@ class PYGAME_WINDOW:
 
             image = FONT3.render('Current Time: ' + str(int(math.floor(currentTime))), True, BLUE)
             self.screen.blit(image, (pygameWindowWidth/2 - 300, pygameWindowDepth / 2 + 300))
+
+            k = 340
+            j = 1
+            image = FONT3.render('Ranks: ', True, BLUE)
+            self.screen.blit(image, (pygameWindowWidth / 2 - 300, pygameWindowDepth / 2 + 320))
+            for i in sorted_times:
+                image = FONT3.render(str(j) + ". " + str(i) + " ", True, BLUE)
+                self.screen.blit(image, (pygameWindowWidth / 2 - 300, pygameWindowDepth / 2 + k))
+                k+=20
+
 
             return 1
         rfrsh = pygame.image.load('images/nothing.png')

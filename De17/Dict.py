@@ -1,5 +1,5 @@
 import pickle
-
+import math
 
 
 def init_database():
@@ -50,6 +50,7 @@ def init_database():
                                 }
                                }
 
+
         print('welcome ' + userName + '.')
 
     pickle.dump(database,open('userData/database.p','wb'))
@@ -64,10 +65,14 @@ def input_database_sign(userName, signTryed):
 
 def update_database_time(userName, signTryed, timeTaken, signTryed2, dAttempted):
     database = pickle.load(open('userData/database.p', 'rb'))
+    topTimeSigned = pickle.load(open('userData/topTime.p', 'rb'))
     database[userName]['time'][signTryed2] += timeTaken
     database[userName]['time'][signTryed] = (database[userName]['time'][signTryed2])/database[userName][dAttempted] if database[userName]['time'][signTryed] != 0 else timeTaken
-    print(database[userName]['time'][signTryed2]/database[userName]['time'][signTryed])
-
+    digit = int(dAttempted[len('digit'):len('digit')+1])
+    topTimeSigned[str(digit)][userName] =  int(math.floor(database[userName]['time'][signTryed])) #this is a set?? howoowowowowowowowowo
+    pickle.dump(topTimeSigned, open('userData/topTime.p', 'wb'))
     pickle.dump(database,open('userData/database.p','wb'))
 
-    return database
+    return database, topTimeSigned
+
+

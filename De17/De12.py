@@ -31,6 +31,7 @@ lastCorrect = False
 start = True
 userName = ''
 database = {}
+topTimeSigned = pickle.load(open('userData/topTime.p', 'rb'))
 startTime = timer()
 end = 0
 
@@ -80,7 +81,7 @@ def Handle_Frame(frame):
 
 
 def Handle_Finger(finger):
-    global x, y, xMin, xMax, yMin, yMax, testData, number, correct, database, startTime, lastNumber, end
+    global x, y, xMin, xMax, yMin, yMax, testData, number, correct, database, startTime, lastNumber, end, topTimeSigned
     hand = frame.hands[0]
     fingers = hand.fingers
     k = 0
@@ -113,7 +114,7 @@ def Handle_Finger(finger):
     end = timer()
 
     if end - startTime > max(10, (15 - database[userName]['digit' + str(number) + 'attempted'])): #if the start time is over 20 then pick a new number
-        database = Dict.update_database_time(userName, 'mean' + str(number) + 'time', end-startTime, 'total' + str(number) + 'time', 'digit' + str(number) + 'attempted')
+        database, topTimeSigned = Dict.update_database_time(userName, 'mean' + str(number) + 'time', end-startTime, 'total' + str(number) + 'time', 'digit' + str(number) + 'attempted')
         number = randrange(10)
 
     if predictedClass == number:
@@ -133,7 +134,7 @@ def Handle_Finger(finger):
 
         #increment the digit signed and start the timer for the next digit
         database = Dict.input_database_sign(userName, 'digit' + str(number) + 'attempted')
-        database = Dict.update_database_time(userName, 'mean' + str(number) + 'time', timeTaken, 'total' + str(number) + 'time', 'digit' + str(number) + 'attempted')
+        database, topTimeSigned = Dict.update_database_time(userName, 'mean' + str(number) + 'time', timeTaken, 'total' + str(number) + 'time', 'digit' + str(number) + 'attempted')
         startTime = timer()
         lastNumber = number
 
@@ -217,7 +218,8 @@ while True:
         if correct == False:
             if number != 10: #10 is equivalent to a void number
                 pw.Adjust_Hand(xBase, yBase, number, database[userName]['digit' + str(number) + 'attempted'],
-                               database[userName]['time']['mean'+str(number)+'time'], end - startTime)
+                               database[userName]['time']['mean'+str(number)+'time'], end - startTime,
+                               topTimeSigned)
                 if end - startTime > max(5, 10 - database[userName]['digit' + str(number) + 'attempted']):
                     image = pygame.image.load('images/look_at_the_time.png')
                     pw.screen.blit(image, (pygameWindowWidth / 2 + 200, 0))
