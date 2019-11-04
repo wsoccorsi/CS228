@@ -67,7 +67,15 @@ def update_database_time(userName, signTryed, timeTaken, signTryed2, dAttempted)
     database = pickle.load(open('userData/database.p', 'rb'))
     topTimeSigned = pickle.load(open('userData/topTime.p', 'rb'))
     database[userName]['time'][signTryed2] += timeTaken
-    database[userName]['time'][signTryed] = (database[userName]['time'][signTryed2])/database[userName][dAttempted] if database[userName]['time'][signTryed] != 0 else timeTaken
+
+    if database[userName][dAttempted] == 0:
+        database[userName]['time'][signTryed] = timeTaken
+        database[userName]['time'][signTryed2] = timeTaken
+
+    else:
+
+        database[userName]['time'][signTryed] = (database[userName]['time'][signTryed2])/database[userName][dAttempted] if database[userName]['time'][signTryed] != 0 else timeTaken
+
     digit = int(dAttempted[len('digit'):len('digit')+1])
     topTimeSigned[str(digit)][userName] =  int(math.floor(database[userName]['time'][signTryed])) #this is a set?? howoowowowowowowowowo
     pickle.dump(topTimeSigned, open('userData/topTime.p', 'wb'))

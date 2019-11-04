@@ -24,7 +24,7 @@ y = pygameWindowDepth - pw.screen.get_height() // 2
 number = 0 #run once
 lastNumber = number
 predictedArray = []
-
+checkN = []
 pauseCheckStart = 0
 pauseCheckEnd = 0
 correct = False
@@ -82,7 +82,7 @@ def Handle_Frame(frame):
 
 
 def Handle_Finger(finger):
-    global x, y, xMin, xMax, yMin, yMax, testData, number, correct, database, startTime, lastNumber, end, topTimeSigned, predictedArray
+    global x, y, xMin, xMax, yMin, yMax, testData, number, correct, database, startTime, lastNumber, end, topTimeSigned, predictedArray, checkN
     hand = frame.hands[0]
     fingers = hand.fingers
     k = 0
@@ -117,12 +117,16 @@ def Handle_Finger(finger):
     if end - startTime > max(10, (15 - database[userName]['digit' + str(number) + 'attempted'])): #if the start time is over 20 then pick a new number
         database, topTimeSigned = Dict.update_database_time(userName, 'mean' + str(number) + 'time', end-startTime, 'total' + str(number) + 'time', 'digit' + str(number) + 'attempted')
         number = randrange(10)
+        startTime = timer()
+
     predictedArray.append(number)
-    checkTen = []
-    for i in range(0, 25):
-        checkTen.append(predictedClass)
-    print(predictedArray)
-    if checkTen == predictedArray[len(predictedArray)-25: len(predictedArray)]:
+    checkN = []
+    for i in range(0, 200):
+        checkN.append(predictedClass)
+
+
+
+    if checkN[0:50] == predictedArray[len(predictedArray)-50: len(predictedArray)]:
         predictedArray = []
         #show check mark
         pw.Prepare()
@@ -223,12 +227,22 @@ while True:
         Handle_Finger(frame)
         if correct == False:
             if number != 10: #10 is equivalent to a void number
-                pw.Adjust_Hand(xBase, yBase, number, database[userName]['digit' + str(number) + 'attempted'],
+                rtnval = pw.Adjust_Hand(xBase, yBase, number, database[userName]['digit' + str(number) + 'attempted'],
                                database[userName]['time']['mean'+str(number)+'time'], end - startTime,
                                topTimeSigned)
+                if checkN[0:25] == predictedArray[len(predictedArray) - 25: len(predictedArray)] and rtnval == 1:
+                    image = pygame.image.load('images/warmer.png')
+                    pw.screen.blit(image, (pygameWindowWidth / 2 + 430, 100))
+                else:
+                    image = pygame.image.load('images/colder.png')
+                    pw.screen.blit(image, (pygameWindowWidth / 2 + 430, 100))
+
                 if end - startTime > max(5, 10 - database[userName]['digit' + str(number) + 'attempted']):
                     image = pygame.image.load('images/look_at_the_time.png')
                     pw.screen.blit(image, (pygameWindowWidth / 2 + 200, 0))
+
+
+
     else:
         pw.Put_Hand_Over()
 
