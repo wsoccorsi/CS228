@@ -23,6 +23,7 @@ x = pygameWindowWidth - pw.screen.get_width() // 2
 y = pygameWindowDepth - pw.screen.get_height() // 2
 number = 0 #run once
 lastNumber = number
+predictedArray = []
 
 pauseCheckStart = 0
 pauseCheckEnd = 0
@@ -81,7 +82,7 @@ def Handle_Frame(frame):
 
 
 def Handle_Finger(finger):
-    global x, y, xMin, xMax, yMin, yMax, testData, number, correct, database, startTime, lastNumber, end, topTimeSigned
+    global x, y, xMin, xMax, yMin, yMax, testData, number, correct, database, startTime, lastNumber, end, topTimeSigned, predictedArray
     hand = frame.hands[0]
     fingers = hand.fingers
     k = 0
@@ -116,8 +117,13 @@ def Handle_Finger(finger):
     if end - startTime > max(10, (15 - database[userName]['digit' + str(number) + 'attempted'])): #if the start time is over 20 then pick a new number
         database, topTimeSigned = Dict.update_database_time(userName, 'mean' + str(number) + 'time', end-startTime, 'total' + str(number) + 'time', 'digit' + str(number) + 'attempted')
         number = randrange(10)
-
-    if predictedClass == number:
+    predictedArray.append(number)
+    checkTen = []
+    for i in range(0, 25):
+        checkTen.append(predictedClass)
+    print(predictedArray)
+    if checkTen == predictedArray[len(predictedArray)-25: len(predictedArray)]:
+        predictedArray = []
         #show check mark
         pw.Prepare()
         image = pygame.image.load('images/iconmonstr-check-mark-1.png')
