@@ -35,14 +35,49 @@ database = {}
 topTimeSigned = pickle.load(open('userData/topTime.p', 'rb'))
 startTime = timer()
 end = 0
+basicNum1 = 0
+basicNum2 = 0
+type = ""
+
+
 
 xMin =  1000.0
 xMax = -1000.0
 yMin =  1000.0
 yMax = -1000.0
 
+def GetMath(number):
+    global basicNum1, basicNum2
+    selector = randrange(2)
+    type = None
+    if selector == 0: #addition
+        basicNum1 = randrange(6)
+        basicNum2 = randrange(5)
+        type = "+"
+        while (basicNum1 + basicNum2) != number:
+            basicNum1 = randrange(6)
+            basicNum2 = randrange(5)
+
+    elif selector == 1: #subtraction
+
+        basicNum1 = randrange(10)
+        basicNum2 = randrange(10)
+        while (basicNum1 - basicNum2) != number:
+            basicNum1 = randrange(10)
+            basicNum2 = randrange(10)
+        type = "-"
 
 
+    elif selector == 2: #mult
+        basicNum1 = randrange(10)
+        basicNum2 = randrange(10)
+        while (basicNum1*basicNum2) != number:
+            basicNum1 = randrange(10)
+            basicNum2 = randrange(10)
+        type = "*"
+
+
+    return type
 def CenterData(testData):
     allXCoordinates = testData[0,::3]
     meanValue = allXCoordinates.mean()
@@ -149,7 +184,7 @@ def Handle_Finger(finger):
         lastNumber = number
 
         #if I've signed this one correct four times get a new number
-        if database[userName]['digit' + str(number) + 'attempted'] > 3:
+        if database[userName]['digit' + str(number) + 'attempted'] > 1: #just making it faster change back to 3 later
             sorted_dict = sorted(database[userName].items(), key=lambda kv: kv[1])[0] #grab the lowest signed number
             number = int(sorted_dict[0][len('digit'):len('digit')+1])
             lastNumber = number #?
@@ -219,6 +254,7 @@ while True:
         userName, database = Dict.init_database()
         sorted_dict = sorted(database[userName].items(), key=lambda kv: kv[1])[0]  # grab the lowest signed number
         number = int(sorted_dict[0][len('digit'):len('digit')+1])
+        type = GetMath(number) #grab the math for this digit
 
         start = False
 
@@ -229,7 +265,7 @@ while True:
             if number != 10: #10 is equivalent to a void number
                 rtnval = pw.Adjust_Hand(xBase, yBase, number, database[userName]['digit' + str(number) + 'attempted'],
                                database[userName]['time']['mean'+str(number)+'time'], end - startTime,
-                               topTimeSigned)
+                               topTimeSigned, basicNum1, basicNum2, type)
                 if checkN[0:25] == predictedArray[len(predictedArray) - 25: len(predictedArray)] and rtnval == 1:
                     image = pygame.image.load('images/warmer.png')
                     pw.screen.blit(image, (pygameWindowWidth / 2 + 430, 100))

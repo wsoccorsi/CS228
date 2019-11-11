@@ -28,14 +28,13 @@ class PYGAME_WINDOW:
         black = 0, 0, 0
         pygame.draw.line(self.screen, black, (xBase, yBase), (xTip, yTip), width)
 
-    def Adjust_Hand(self, x, y, number, attempts, avgTime, currentTime, topTimeSigned):
+    def Adjust_Hand(self, x, y, number, attempts, avgTime, currentTime, topTimeSigned, basicNum1, basicNum2, type):
         BLUE = pygame.Color('dodgerblue1')
         FONT2 = pygame.font.Font(None, 100)
         FONT3 = pygame.font.Font(None, 40)
 
         if number != 10:
             sorted_times = sorted(topTimeSigned[str(number)].items(), key=lambda kv: kv[1])  # grab the lowest signed number
-            print(sorted_times)
         else:
             sorted_times = []
 
@@ -50,31 +49,34 @@ class PYGAME_WINDOW:
         else: #if centered
             image = pygame.image.load('images/nothing.png')
             self.screen.blit(image, (pygameWindowWidth / 2 , 0))
-            if number == 0:
-                image = pygame.image.load('images/Hand0.png')
-            elif number == 1:
-                image = pygame.image.load('images/Hand1.png')
-            elif number == 2:
-                image = pygame.image.load('images/Hand2.png')
-            elif number == 3:
-                image = pygame.image.load('images/Hand3.png')
-            elif number == 4:
-                image = pygame.image.load('images/Hand4.png')
-            elif number == 5:
-                image = pygame.image.load('images/Hand5.png')
-            elif number == 6:
-                image = pygame.image.load('images/Hand6.png')
-            elif number == 7:
-                image = pygame.image.load('images/Hand7.png')
-            elif number == 8:
-                image = pygame.image.load('images/Hand8.png')
-            elif number == 9:
-                image = pygame.image.load('images/Hand9.png')
-            elif number == 10:
-                image = pygame.image.load('images/nothing.png')
+            # if number == 0:
+            #     image = pygame.image.load('images/Hand0.png')
+            # elif number == 1:
+            #     image = pygame.image.load('images/Hand1.png')
+            # elif number == 2:
+            #     image = pygame.image.load('images/Hand2.png')
+            # elif number == 3:
+            #     image = pygame.image.load('images/Hand3.png')
+            # elif number == 4:
+            #     image = pygame.image.load('images/Hand4.png')
+            # elif number == 5:
+            #     image = pygame.image.load('images/Hand5.png')
+            # elif number == 6:
+            #     image = pygame.image.load('images/Hand6.png')
+            # elif number == 7:
+            #     image = pygame.image.load('images/Hand7.png')
+            # elif number == 8:
+            #     image = pygame.image.load('images/Hand8.png')
+            # elif number == 9:
+            #     image = pygame.image.load('images/Hand9.png')
+            # elif number == 10:
+            #     image = pygame.image.load('images/nothing.png')
             if attempts > 1:
                 image = FONT2.render(str(number), True, BLUE)
 
+            self.screen.blit(image, (pygameWindowWidth / 2 + 150, pygameWindowDepth/2 + 300))
+
+            image = FONT2.render('X =  ' + str(basicNum1) + " " + type + " " + str(basicNum2), True, BLUE)
             self.screen.blit(image, (pygameWindowWidth / 2 + 150, pygameWindowDepth/2 + 100))
 
             # print(attempts)
