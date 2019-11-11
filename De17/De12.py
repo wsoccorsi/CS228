@@ -48,7 +48,7 @@ yMax = -1000.0
 
 def GetMath(number):
     global basicNum1, basicNum2
-    selector = randrange(2)
+    selector = randrange(3)
     type = None
     if selector == 0: #addition
         basicNum1 = randrange(6)
@@ -65,6 +65,7 @@ def GetMath(number):
         while (basicNum1 - basicNum2) != number:
             basicNum1 = randrange(10)
             basicNum2 = randrange(10)
+
         type = "-"
 
 
@@ -74,10 +75,12 @@ def GetMath(number):
         while (basicNum1*basicNum2) != number:
             basicNum1 = randrange(10)
             basicNum2 = randrange(10)
+
         type = "*"
 
 
     return type
+
 def CenterData(testData):
     allXCoordinates = testData[0,::3]
     meanValue = allXCoordinates.mean()
@@ -117,7 +120,7 @@ def Handle_Frame(frame):
 
 
 def Handle_Finger(finger):
-    global x, y, xMin, xMax, yMin, yMax, testData, number, correct, database, startTime, lastNumber, end, topTimeSigned, predictedArray, checkN
+    global x, y, xMin, xMax, yMin, yMax, testData, number, correct, database, startTime, lastNumber, end, topTimeSigned, predictedArray, checkN, type
     hand = frame.hands[0]
     fingers = hand.fingers
     k = 0
@@ -278,8 +281,31 @@ while True:
 
                 if end - startTime > max(5, 10 - database[userName]['digit' + str(number) + 'attempted']):
                     image = pygame.image.load('images/look_at_the_time.png')
-                    pw.screen.blit(image, (pygameWindowWidth / 2 + 200, 0))
 
+                    pw.screen.blit(image, (pygameWindowWidth / 2 + 200, 0))
+                    if number == 0:
+                        image = pygame.image.load('images/Hand0.png')
+                    elif number == 1:
+                        image = pygame.image.load('images/Hand1.png')
+                    elif number == 2:
+                        image = pygame.image.load('images/Hand2.png')
+                    elif number == 3:
+                        image = pygame.image.load('images/Hand3.png')
+                    elif number == 4:
+                        image = pygame.image.load('images/Hand4.png')
+                    elif number == 5:
+                        image = pygame.image.load('images/Hand5.png')
+                    elif number == 6:
+                        image = pygame.image.load('images/Hand6.png')
+                    elif number == 7:
+                        image = pygame.image.load('images/Hand7.png')
+                    elif number == 8:
+                        image = pygame.image.load('images/Hand8.png')
+                    elif number == 9:
+                        image = pygame.image.load('images/Hand9.png')
+                    elif number == 10:
+                        image = pygame.image.load('images/nothing.png')
+                    pw.screen.blit(image, (pygameWindowWidth / 2 + 75, 0))
 
 
     else:
