@@ -152,6 +152,8 @@ def Handle_Finger(finger):
     if end - startTime > max(10, (15 - database[userName]['digit' + str(number) + 'attempted'])): #if the start time is over 20 then pick a new number
         database, topTimeSigned = Dict.update_database_time(userName, 'mean' + str(number) + 'time', end-startTime, 'total' + str(number) + 'time', 'digit' + str(number) + 'attempted')
         number = randrange(10)
+        type = GetMath(number)
+
         startTime = timer()
 
     predictedArray.append(number)
@@ -184,9 +186,10 @@ def Handle_Finger(finger):
         lastNumber = number
 
         #if I've signed this one correct four times get a new number
-        if database[userName]['digit' + str(number) + 'attempted'] > 1: #just making it faster change back to 3 later
+        if database[userName]['digit' + str(number) + 'attempted'] > 0: #just making it faster change back to 3 later
             sorted_dict = sorted(database[userName].items(), key=lambda kv: kv[1])[0] #grab the lowest signed number
             number = int(sorted_dict[0][len('digit'):len('digit')+1])
+            type = GetMath(number)
             lastNumber = number #?
 
         number = 10 #disable number
