@@ -81,6 +81,8 @@ def GetMath(number):
 
     return type
 
+
+
 def CenterData(testData):
     allXCoordinates = testData[0,::3]
     meanValue = allXCoordinates.mean()
@@ -154,6 +156,7 @@ def Handle_Finger(finger):
 
     if end - startTime > max(10, (15 - database[userName]['digit' + str(number) + 'attempted'])): #if the start time is over 20 then pick a new number
         database, topTimeSigned = Dict.update_database_time(userName, 'mean' + str(number) + 'time', end-startTime, 'total' + str(number) + 'time', 'digit' + str(number) + 'attempted')
+        database = Dict.input_database_sign(userName, 'digit' + str(number) + 'attempted')
         number = randrange(10)
         type = GetMath(number)
 
@@ -184,6 +187,7 @@ def Handle_Finger(finger):
 
         #increment the digit signed and start the timer for the next digit
         database = Dict.input_database_sign(userName, 'digit' + str(number) + 'attempted')
+        database = Dict.input_correct_database_sign(userName, 'digit' + str(number) + 'attempted')
         database, topTimeSigned = Dict.update_database_time(userName, 'mean' + str(number) + 'time', timeTaken, 'total' + str(number) + 'time', 'digit' + str(number) + 'attempted')
         startTime = timer()
         lastNumber = number
@@ -259,9 +263,9 @@ while True:
     if start:
         userName, database = Dict.init_database()
         sorted_dict = sorted(database[userName].items(), key=lambda kv: kv[1])[0]  # grab the lowest signed number
-        number = int(sorted_dict[0][len('digit'):len('digit')+1])
+        number = 8
         type = GetMath(number) #grab the math for this digit
-
+        
         start = False
 
 
@@ -271,7 +275,8 @@ while True:
             if number != 10: #10 is equivalent to a void number
                 rtnval = pw.Adjust_Hand(xBase, yBase, number, database[userName]['digit' + str(number) + 'attempted'],
                                database[userName]['time']['mean'+str(number)+'time'], end - startTime,
-                               topTimeSigned, basicNum1, basicNum2, type)
+                               topTimeSigned, basicNum1, basicNum2, type,
+                               database[userName]['correctAttempts']['digit' + str(number) + 'attempted'] )
                 if checkN[0:25] == predictedArray[len(predictedArray) - 25: len(predictedArray)] and rtnval == 1:
                     image = pygame.image.load('images/warmer.png')
                     pw.screen.blit(image, (pygameWindowWidth / 2 + 430, 100))
