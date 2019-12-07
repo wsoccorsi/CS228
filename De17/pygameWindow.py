@@ -94,13 +94,13 @@ class PYGAME_WINDOW:
 
             self.screen.blit(image, (pygameWindowWidth/2 - 300, pygameWindowDepth / 2+ 200))
 
-            image = FONT3.render('Current Time: ' + str(int(math.floor(currentTime))), True, BLUE)
+            image = FONT3.render('Ranks: ', True, BLUE)
             self.screen.blit(image, (pygameWindowWidth/2 - 300, pygameWindowDepth / 2 + 300))
 
 
             k = 360
             j = 1
-            image = FONT3.render('Ranks: ', True, BLUE)
+            image = FONT3.render('Current Time: ' + str(int(math.floor(currentTime))), True, BLUE)
             self.screen.blit(image, (pygameWindowWidth / 2 - 300, pygameWindowDepth / 2 + 230))
             for i in sorted_times:
                 image = FONT3.render(str(j) + ". " + str(i[0]) + ": " + str(i[1]), True, BLUE)

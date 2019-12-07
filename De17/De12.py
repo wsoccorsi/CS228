@@ -154,7 +154,7 @@ def Handle_Finger(finger):
     predictedClass = clf.Predict(testData)
     end = timer()
 
-    if end - startTime > max(10, (15 - database[userName]['digit' + str(number) + 'attempted'])): #if the start time is over 20 then pick a new number
+    if end - startTime > max(10, (15 - database[userName]['correctAttempts']['digit' + str(number) + 'attempted'])): #if the start time is over 20 then pick a new number
         database, topTimeSigned = Dict.update_database_time(userName, 'mean' + str(number) + 'time', end-startTime, 'total' + str(number) + 'time', 'digit' + str(number) + 'attempted')
         database = Dict.input_database_sign(userName, 'digit' + str(number) + 'attempted')
         number = randrange(10)
@@ -193,9 +193,11 @@ def Handle_Finger(finger):
         lastNumber = number
 
         #if I've signed this one correct four times get a new number
-        if database[userName]['digit' + str(number) + 'attempted'] > 0: #just making it faster change back to 3 later
-            sorted_dict = sorted(database[userName].items(), key=lambda kv: kv[1])[0] #grab the lowest signed number
+        if database[userName]['digit' + str(number) + 'attempted'] > 3: #just making it faster change back to 3 later
+            sorted_dict = sorted(database[userName]['correctAttempts'].items(), key=lambda kv: kv[1])[0] #grab the lowest signed number
             number = int(sorted_dict[0][len('digit'):len('digit')+1])
+            print(sorted_dict)
+            print("New number " + str(number))
             type = GetMath(number)
             lastNumber = number #?
 
@@ -262,8 +264,10 @@ while True:
     #database handle start
     if start:
         userName, database = Dict.init_database()
-        sorted_dict = sorted(database[userName].items(), key=lambda kv: kv[1])[0]  # grab the lowest signed number
-        number = 8
+        startTime = timer()
+
+        sorted_dict = sorted(database[userName]['correctAttempts'].items(), key=lambda kv: kv[1])[0]  # grab the lowest signed number
+        number = int(sorted_dict[0][len('digit'):len('digit') + 1])
         type = GetMath(number) #grab the math for this digit
         
         start = False
